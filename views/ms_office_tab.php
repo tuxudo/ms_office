@@ -18,10 +18,10 @@ $(document).on('appReady', function(){
 			var rows_onedrive = ''
 			var rows_reportdestkop = ''
 			var rows_sfb = ''
-			var rows_reg_apps = ''
+			var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
 			for (var prop in d){
-				// Skip skipThese
-				if(skipThese.indexOf(prop) == -1){
+			// Skip skipThese
+			if(skipThese.indexOf(prop) == -1){
                     // Do nothing for empty values to blank them
                     if (d[prop] == '' || d[prop] == null){
                         rows = rows
@@ -130,21 +130,17 @@ $(document).on('appReady', function(){
                     // Else if build out the registered applications table
                     } else if(prop == "registeredapplications"){
                         var reg_apps_data = JSON.parse(d['registeredapplications']);
-                        rows_reg_apps = rows_reg_apps+'<tr><th>'+i18n.t('ms_office.application')+'</th><th>'+i18n.t('ms_office.application_id')+'</th><th>'+i18n.t('ms_office.title')+'</th><th>'+i18n.t('ms_office.versionondisk')+'</th><th>'+i18n.t('ms_office.baseline_version')+'</th><th>'+i18n.t('ms_office.update_version')+'</th><th>'+i18n.t('ms_office.date')+'</th></tr>'
-                        if (parseInt(reg_apps_data.length) == 0 ){
-                                rows_reg_apps = rows_reg_apps+'<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>';   
-                        } else {
-                            $.each(reg_apps_data, function(i,d){
-                                if (typeof d['application_id'] !== "undefined"){var application_id = d['application_id']}else{var application_id = ""}
-                                if (typeof d['title'] !== "undefined"){var title = d['title']}else{var title = ""}
-                                if (typeof d['versionondisk'] !== "undefined"){var versionondisk = d['versionondisk']}else{var versionondisk = ""}
-                                if (typeof d['baseline_version'] !== "undefined"){var baseline_version = d['baseline_version']}else{var baseline_version = ""}
-                                if (typeof d['update_version'] !== "undefined"){var update_version = d['update_version']}else{var update_version = ""}
-                                if (typeof d['date'] !== "undefined"){var date = d['date']}else{var date = ""}
-                                // Generate rows from data
-                                rows_reg_apps = rows_reg_apps + '<tr><td>'+i+'</td><td>'+application_id+'</td><td>'+title+'</td><td>'+versionondisk+'</td><td>'+baseline_version+'</td><td>'+update_version+'</td><td>'+date+'</td></tr>';
-                            })
-                        }
+                        rows_reg_apps = '<tr><th>'+i18n.t('ms_office.application')+'</th><th>'+i18n.t('ms_office.application_id')+'</th><th>'+i18n.t('ms_office.title')+'</th><th>'+i18n.t('ms_office.versionondisk')+'</th><th>'+i18n.t('ms_office.baseline_version')+'</th><th>'+i18n.t('ms_office.update_version')+'</th><th>'+i18n.t('ms_office.date')+'</th></tr>'
+                        $.each(reg_apps_data, function(i,d){
+                            if (typeof d['application_id'] !== "undefined"){var application_id = d['application_id']}else{var application_id = ""}
+                            if (typeof d['title'] !== "undefined"){var title = d['title']}else{var title = ""}
+                            if (typeof d['versionondisk'] !== "undefined"){var versionondisk = d['versionondisk']}else{var versionondisk = ""}
+                            if (typeof d['baseline_version'] !== "undefined"){var baseline_version = d['baseline_version']}else{var baseline_version = ""}
+                            if (typeof d['update_version'] !== "undefined"){var update_version = d['update_version']}else{var update_version = ""}
+                            if (typeof d['date'] !== "undefined"){var date = d['date']}else{var date = ""}
+                            // Generate rows from data
+                            rows_reg_apps = rows_reg_apps + '<tr><td>'+i+'</td><td>'+application_id+'</td><td>'+title+'</td><td>'+versionondisk+'</td><td>'+baseline_version+'</td><td>'+update_version+'</td><td>'+date+'</td></tr>';
+                        })
                         rows_reg_apps = rows_reg_apps // Close registered applications table framework
 
                     // Else, build out rows
@@ -164,16 +160,29 @@ $(document).on('appReady', function(){
                             .append(rows))))
             
             // Registered apps block
-            $('#ms_office-tab')
-                .append($('<h4>')
-                    .append($('<i>')
-                            .addClass('fa fa-registered'))
-                        .append(' '+i18n.t('ms_office.registeredapplications')))
-                .append($('<div style="max-width:1050px;">')
-                    .append($('<table>')
-                        .addClass('table table-striped table-condensed')
-                        .append($('<tbody>')
-                            .append(rows_reg_apps))))
+            if (typeof d.application_id === "undefined"){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                                .addClass('fa fa-registered'))
+                            .append(' '+i18n.t('ms_office.registeredapplications')))
+                    .append($('<div style="max-width:400px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_reg_apps))))
+            } else {
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                                .addClass('fa fa-registered'))
+                            .append(' '+i18n.t('ms_office.registeredapplications')))
+                    .append($('<div style="max-width:1050px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_reg_apps))))
+            }
 
             // MAU block
             if (rows_mau !== ''){
