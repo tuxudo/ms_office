@@ -166,7 +166,7 @@ $(document).on('appReady', function(){
                             .append(rows))))
             
             // Registered apps block
-            if (typeof d.application_id === "undefined"){
+            if (typeof d.registeredapplications !== "string"){
                 $('#ms_office-tab')
                     .append($('<h4>')
                         .append($('<i>')
