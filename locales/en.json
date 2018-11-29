@@ -1,8 +1,8 @@
 {
     "ms_office": "Microsoft Office",
     "ms_mau": "Microsoft AutoUpdate",
-    "report": "Microsoft Office Remote",
-    "mau_report": "Microsoft AutoUpdate Remote",
+    "report": "Microsoft Office Report",
+    "mau_report": "Microsoft AutoUpdate Report",
     "channelname": "Channel",
     "howtocheck": "How to Check",
     "lastcheckforupdates": "Last Check",
