@@ -11,7 +11,6 @@ new Ms_office_model;
   <div class="row">
   	<div class="col-lg-12">
 	<h3><span data-i18n="ms_office.report"></span> <span id="total-count" class='label label-primary'>…</span></h3>
-
 		  <table class="table table-striped table-condensed table-bordered">
 		    <thead>
 		      <tr>
@@ -44,8 +43,8 @@ new Ms_office_model;
 		    </thead>
 		    <tbody>
 		    	<tr>
-					<td data-i18n="listing.loading" colspan="24" class="dataTables_empty"></td>
-				</tr>
+		    	     <td data-i18n="listing.loading" colspan="24" class="dataTables_empty"></td>
+		    	</tr>
 		    </tbody>
 		  </table>
     </div> <!-- /span 13 -->
@@ -109,59 +108,59 @@ new Ms_office_model;
 
 	        	// Format shared o365
 	        	var status=$('td:eq(4)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(4)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(4)', nRow).html(status)
                 
 	        	// Format Excel MAS
 	        	var status=$('td:eq(7)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(7)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(7)', nRow).html(status)
                 
 	        	// Format OneNote MAS
 	        	var status=$('td:eq(10)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(10)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(10)', nRow).html(status)
                 
 	        	// Format Outlook MAS
 	        	var status=$('td:eq(13)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(13)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(13)', nRow).html(status)
                 
 	        	// Format PowerPoint MAS
 	        	var status=$('td:eq(16)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(16)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(16)', nRow).html(status)
                 
 	        	// Format Word MAS
 	        	var status=$('td:eq(19)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(19)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(19)', nRow).html(status)
                 
 	        	// Format OneDrive MAS
 	        	var status=$('td:eq(22)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(22)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(22)', nRow).html(status)
                 
 	        	// Format Remote Desktop MAS
 	        	var status=$('td:eq(24)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(24)', nRow).html(status)
+	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+	        	$('td:eq(24)', nRow).html(status)
                 
-            }
+	        }
 	    } );
         
 	    // Use hash as searchquery
 	    if(window.location.hash.substring(1))
 	    {
-			oTable.fnFilter( decodeURIComponent(window.location.hash.substring(1)) );
+		oTable.fnFilter( decodeURIComponent(window.location.hash.substring(1)) );
 	    }
 
 	} );
