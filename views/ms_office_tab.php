@@ -101,7 +101,13 @@ $(document).on('appReady', function(){
                         
                     // Else if, AutoUpdate
                     } else if(prop.indexOf('autoupdate_') > -1 || prop == 'channelname'  || prop == 'howtocheck'  || prop == 'lastcheckforupdates'  || prop == 'manifestserver'  || prop == 'updatecache' ){
-                        rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                        // Format last check date, if timestamp
+                        if (prop == 'lastcheckforupdates' && ! isNaN(d[prop]) && d[prop] !== ""){
+                            var date = new Date(d[prop] * 1000);
+                            rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td><span title="'+moment(date).format('llll')+'">'+moment(date).fromNow()+'</span></td></tr>';
+                        } else {
+                            rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                        }
                     // Else if, Excel
                     } else if(prop.indexOf('excel_') > -1){
                         rows_excel = rows_excel + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
