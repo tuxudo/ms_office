@@ -24,7 +24,30 @@ class Ms_office_controller extends Module_controller
     {
         echo "You've loaded the ms_office module!";
     }
-    
+
+    /**
+    * Retrieve data in json format
+    *
+    * @return void
+    * @author joncrain
+    **/
+    public function get_stats()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+  
+        $queryobj = new Ms_office_model();
+        $sql = "select COUNT(1) as total,
+        COUNT(CASE WHEN `channelname` = 'InsiderFast' THEN 1 END) AS 'InsiderFast',
+        COUNT(CASE WHEN `channelname` = 'External' THEN 1 END) AS 'InsiderSlow',
+        COUNT(CASE WHEN `channelname` = 'Production' THEN 1 END) AS Production
+        from ms_office";
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+    }
+
     /**
     * Retrieve data in json format
     *
