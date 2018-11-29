@@ -105,15 +105,6 @@ new Ms_office_model;
 	        	var sn=$('td:eq(1)', nRow).html();
 	        	var link = mr.getClientDetailLink(name, sn, '#tab_ms_office-tab');
 	        	$('td:eq(0)', nRow).html(link);
-			    
-			                    
-	        	// Format time, if timestamp
-	        	var updatecheck = $('td:eq(2)', nRow).html(); 
-	        	if (! isNaN(updatecheck) && updatecheck !== ""){
-	        	     parseInt(updatecheck);
-	        	     var date = new Date(updatecheck * 1000);
-	        	     $('td:eq(2)', nRow).html('<span title="'+moment(date).format('llll')+'">'+moment(date).fromNow()+'</span>');
-	        	}
 
 	        	// Format shared o365
 	        	var status=$('td:eq(4)', nRow).html();
