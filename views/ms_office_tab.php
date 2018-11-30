@@ -20,8 +20,8 @@ $(document).on('appReady', function(){
 			var rows_sfb = ''
 			var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
 			for (var prop in d){
-			// Skip skipThese
-			if(skipThese.indexOf(prop) == -1){
+				// Skip skipThese
+				if(skipThese.indexOf(prop) == -1){
                     // Do nothing for empty values to blank them
                     if (d[prop] == '' || d[prop] == null){
                         rows = rows

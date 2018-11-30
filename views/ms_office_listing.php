@@ -54,11 +54,9 @@ new Ms_office_model;
 <script type="text/javascript">
 
 	$(document).on('appUpdate', function(e){
-
 		var oTable = $('.table').DataTable();
 		oTable.ajax.reload();
 		return;
-
 	});
 
 	$(document).on('appReady', function(e, lang) {
@@ -75,11 +73,11 @@ new Ms_office_model;
             columnDefs.push({name: $(this).data('colname'), targets: col});
 
             if($(this).data('sort')){
-              mySort.push([col, $(this).data('sort')])
+                mySort.push([col, $(this).data('sort')])
             }
 
             if($(this).data('hide')){
-              hideThese.push(col);
+                hideThese.push(col);
             }
 
             col++
@@ -111,56 +109,56 @@ new Ms_office_model;
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(4)', nRow).html(status)
-                
+	        	
 	        	// Format Excel MAS
 	        	var status=$('td:eq(7)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(7)', nRow).html(status)
-                
+	        	
 	        	// Format OneNote MAS
 	        	var status=$('td:eq(10)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(10)', nRow).html(status)
-                
+	        	
 	        	// Format Outlook MAS
 	        	var status=$('td:eq(13)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(13)', nRow).html(status)
-                
+	        	
 	        	// Format PowerPoint MAS
 	        	var status=$('td:eq(16)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(16)', nRow).html(status)
-                
+	        	
 	        	// Format Word MAS
 	        	var status=$('td:eq(19)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(19)', nRow).html(status)
-                
+	        	
 	        	// Format OneDrive MAS
 	        	var status=$('td:eq(22)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(22)', nRow).html(status)
-                
+	        	
 	        	// Format Remote Desktop MAS
 	        	var status=$('td:eq(24)', nRow).html();
 	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
 	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
 	        	$('td:eq(24)', nRow).html(status)
-                
-	        }
+	        	
+		    }
 	    } );
         
-	    // Use hash as searchquery
+	    // Use hash as search query
 	    if(window.location.hash.substring(1))
 	    {
-		oTable.fnFilter( decodeURIComponent(window.location.hash.substring(1)) );
+		    oTable.fnFilter( decodeURIComponent(window.location.hash.substring(1)) );
 	    }
 
 	} );
