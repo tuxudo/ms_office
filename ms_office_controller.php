@@ -24,7 +24,7 @@ class Ms_office_controller extends Module_controller
     {
         echo "You've loaded the ms_office module!";
     }
-    
+
     /**
     * Retrieve data in json format
     *
@@ -44,7 +44,10 @@ class Ms_office_controller extends Module_controller
                         COUNT(CASE WHEN `channelname` = 'InsiderFast' THEN 1 END) AS 'InsiderFast',
                         COUNT(CASE WHEN `channelname` = 'External' THEN 1 END) AS 'InsiderSlow',
                         COUNT(CASE WHEN `channelname` = 'Production' THEN 1 END) AS 'Production'
-                        from ms_office";
+                        from ms_office
+                        LEFT JOIN reportdata USING (serial_number)
+                        WHERE
+                            ".get_machine_group_filter('');
         $obj->view('json', array('msg' => current($queryobj->query($sql))));
     }
     
@@ -54,125 +57,32 @@ class Ms_office_controller extends Module_controller
     * @return void
     * @author tuxudo
     **/
-    public function get_word_generation()
+    public function get_generation()
     {
         $obj = new View();
         if (! $this->authorized()) {
             $obj->view('json', array('msg' => 'Not authorized'));
             return;
         }
-  
+        
         $queryobj = new Ms_office_model();
-        $sql = "select COUNT(CASE WHEN `word_office_generation` = '2016' THEN 1 END) AS 'gen_2016',
-                        COUNT(CASE WHEN `word_office_generation` = '2019' THEN 1 END) AS 'gen_2019'
-                        FROM ms_office
-						LEFT JOIN reportdata USING (serial_number)
-                        WHERE
+        $sql = "select COUNT(CASE WHEN `word_office_generation` = '2016' THEN 1 END) AS 'word_gen_2016',
+                    COUNT(CASE WHEN `word_office_generation` = '2019' THEN 1 END) AS 'word_gen_2019',
+                    COUNT(CASE WHEN `excel_office_generation` = '2016' THEN 1 END) AS 'excel_gen_2016',
+                    COUNT(CASE WHEN `excel_office_generation` = '2019' THEN 1 END) AS 'excel_gen_2019',
+                    COUNT(CASE WHEN `powerpoint_office_generation` = '2016' THEN 1 END) AS 'powerpoint_gen_2016',
+                    COUNT(CASE WHEN `powerpoint_office_generation` = '2019' THEN 1 END) AS 'powerpoint_gen_2019',
+                    COUNT(CASE WHEN `outlook_office_generation` = '2016' THEN 1 END) AS 'outlook_gen_2016',
+                    COUNT(CASE WHEN `powerpoint_office_generation` = '2019' THEN 1 END) AS 'outlook_gen_2019',
+                    COUNT(CASE WHEN `onenote_office_generation` = '2016' THEN 1 END) AS 'onenote_gen_2016',
+                    COUNT(CASE WHEN `onenote_office_generation` = '2019' THEN 1 END) AS 'onenote_gen_2019'
+                    FROM ms_office
+                    LEFT JOIN reportdata USING (serial_number)
+                    WHERE
 						".get_machine_group_filter('');
-
         $obj->view('json', array('msg' => current($queryobj->query($sql))));
     }
-    
-    /**
-    * Retrieve data in json format
-    *
-    * @return void
-    * @author tuxudo
-    **/
-    public function get_excel_generation()
-    {
-        $obj = new View();
-        if (! $this->authorized()) {
-            $obj->view('json', array('msg' => 'Not authorized'));
-            return;
-        }
-  
-        $queryobj = new Ms_office_model();
-        $sql = "select COUNT(CASE WHEN `excel_office_generation` = '2016' THEN 1 END) AS 'gen_2016',
-                        COUNT(CASE WHEN `excel_office_generation` = '2019' THEN 1 END) AS 'gen_2019'
-                        FROM ms_office
-						LEFT JOIN reportdata USING (serial_number)
-                        WHERE
-						".get_machine_group_filter('');
 
-        $obj->view('json', array('msg' => current($queryobj->query($sql))));
-    }
-    
-    /**
-    * Retrieve data in json format
-    *
-    * @return void
-    * @author tuxudo
-    **/
-    public function get_powerpoint_generation()
-    {
-        $obj = new View();
-        if (! $this->authorized()) {
-            $obj->view('json', array('msg' => 'Not authorized'));
-            return;
-        }
-  
-        $queryobj = new Ms_office_model();
-        $sql = "select COUNT(CASE WHEN `powerpoint_office_generation` = '2016' THEN 1 END) AS 'gen_2016',
-                        COUNT(CASE WHEN `powerpoint_office_generation` = '2019' THEN 1 END) AS 'gen_2019'
-                        FROM ms_office
-						LEFT JOIN reportdata USING (serial_number)
-                        WHERE
-						".get_machine_group_filter('');
-
-        $obj->view('json', array('msg' => current($queryobj->query($sql))));
-    }
-    
-    /**
-    * Retrieve data in json format
-    *
-    * @return void
-    * @author tuxudo
-    **/
-    public function get_outlook_generation()
-    {
-        $obj = new View();
-        if (! $this->authorized()) {
-            $obj->view('json', array('msg' => 'Not authorized'));
-            return;
-        }
-  
-        $queryobj = new Ms_office_model();
-        $sql = "select COUNT(CASE WHEN `outlook_office_generation` = '2016' THEN 1 END) AS 'gen_2016',
-                        COUNT(CASE WHEN `outlook_office_generation` = '2019' THEN 1 END) AS 'gen_2019'
-                        FROM ms_office
-						LEFT JOIN reportdata USING (serial_number)
-                        WHERE
-						".get_machine_group_filter('');
-
-        $obj->view('json', array('msg' => current($queryobj->query($sql))));
-    }
-    
-    /**
-    * Retrieve data in json format
-    *
-    * @return void
-    * @author tuxudo
-    **/
-    public function get_onenote_generation()
-    {
-        $obj = new View();
-        if (! $this->authorized()) {
-            $obj->view('json', array('msg' => 'Not authorized'));
-            return;
-        }
-  
-        $queryobj = new Ms_office_model();
-        $sql = "select COUNT(CASE WHEN `onenote_office_generation` = '2016' THEN 1 END) AS 'gen_2016',
-                        COUNT(CASE WHEN `onenote_office_generation` = '2019' THEN 1 END) AS 'gen_2019'
-                        FROM ms_office
-						LEFT JOIN reportdata USING (serial_number)
-                        WHERE
-						".get_machine_group_filter('');
-
-        $obj->view('json', array('msg' => current($queryobj->query($sql))));
-    }
-    
     /**
     * Retrieve data in json format
     *

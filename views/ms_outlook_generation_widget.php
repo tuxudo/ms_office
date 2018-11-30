@@ -13,7 +13,7 @@
 <script>
 $(document).on('appUpdate', function(e, lang) {
 
-    $.getJSON( appUrl + '/module/ms_office/get_outlook_generation', function( data ) {
+    $.getJSON( appUrl + '/module/ms_office/get_generation', function( data ) {
         if(data.error){
             //alert(data.error);
             return;
@@ -23,8 +23,8 @@ $(document).on('appUpdate', function(e, lang) {
         baseUrl = appUrl + '/show/listing/ms_office/ms_office/#';
         panel.empty();
         // Set statuses
-        panel.append(' <a href="'+baseUrl+'2019" class="btn btn-success"><span class="bigger-150">'+data.gen_2019+'</span><br>&nbsp;&nbsp;2019&nbsp;&nbsp;</a>');
-        panel.append(' <a href="'+baseUrl+'2016" class="btn btn-warning"><span class="bigger-150">'+data.gen_2016+'</span><br>&nbsp;&nbsp;2016&nbsp;&nbsp;</a>');
+        panel.append(' <a href="'+baseUrl+'2019" class="btn btn-success"><span class="bigger-150">'+data.outlook_gen_2019+'</span><br>&nbsp;&nbsp;2019&nbsp;&nbsp;</a>');
+        panel.append(' <a href="'+baseUrl+'2016" class="btn btn-warning"><span class="bigger-150">'+data.outlook_gen_2016+'</span><br>&nbsp;&nbsp;2016&nbsp;&nbsp;</a>');
     });
 
 });
