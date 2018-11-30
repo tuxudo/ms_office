@@ -56,14 +56,15 @@ class utmpx(Structure):
 def get_msupdate_config():
 # Get the MAU's config as seen from the current or last person logged in
 # Because some settings are user specific
-    cmd = ['/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate', '-c', '-f','plist']
-    proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
-                            preexec_fn=demote(),
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    (output, unused_error) = proc.communicate()
 
     try:
+        cmd = ['/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate', '-c', '-f','plist']
+        proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
+                                preexec_fn=demote(),
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (output, unused_error) = proc.communicate()
+
         mau_config = plistlib.readPlistFromString(output.split("\n",2)[2])
         mau_config_items = {}
 
@@ -114,15 +115,14 @@ def process_registered_apps(mau_config):
 
 def get_msupdate_update_check(mau_update_items):
 # Quickly check for updates as the current or last person logged in
-    
-    cmd = ['/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate', '-l', '-f','plist']
-    proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
-                            preexec_fn=demote(),
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    (output, unused_error) = proc.communicate()
+    try:    
+        cmd = ['/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate', '-l', '-f','plist']
+        proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
+                                preexec_fn=demote(),
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (output, unused_error) = proc.communicate()
         
-    try:
         mau_update = plistlib.readPlistFromString(output.split("\n",2)[2])
 
         for app in mau_update:
@@ -130,8 +130,8 @@ def get_msupdate_update_check(mau_update_items):
             for item in app:
                 if item == 'Application ID':
                     mau_update_items['registeredapplications'][app_name]['application_id'] = app[item]
-                elif item == 'ApplicationToBeUpdatedPath':
-                    mau_update_items['registeredapplications'][app_name]['applicationpathtobeupdated'] = app[item]
+#                elif item == 'ApplicationToBeUpdatedPath':
+#                    mau_update_items['registeredapplications'][app_name]['applicationpathtobeupdated'] = app[item]
                 elif item == 'Baseline Version':
                     mau_update_items['registeredapplications'][app_name]['baseline_version'] = app[item]
                 elif item == 'Date':
