@@ -24,14 +24,14 @@ class Ms_office_controller extends Module_controller
     {
         echo "You've loaded the ms_office module!";
     }
-
+    
     /**
     * Retrieve data in json format
     *
     * @return void
     * @author joncrain
     **/
-    public function get_stats()
+    public function get_channel()
     {
         $obj = new View();
         if (! $this->authorized()) {
@@ -47,7 +47,7 @@ class Ms_office_controller extends Module_controller
         from ms_office";
         $obj->view('json', array('msg' => current($queryobj->query($sql))));
     }
-
+    
     /**
     * Retrieve data in json format
     *

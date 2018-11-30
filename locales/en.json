@@ -73,7 +73,7 @@
     "no_registeredapplications": "No Registered Applications",
     "not_installed": "Not Installed",
     "installed": "Installed",
-    "mau_widget": {
+    "mau_channel_widget": {
         "title": "Microsoft Update Channel",
         "insider_fast": "Insider Fast",
         "insider_slow": "Insider Slow",
