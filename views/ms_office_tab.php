@@ -27,9 +27,15 @@ $(document).on('appReady', function(){
                         rows = rows
 
                     // Format enabled/disabled
-                    } else if((prop == 'enablecheckforupdatesbutton' || prop == 'sendalltelemetryenabled' || prop == 'disableinsidercheckbox' ) && d[prop] == 0){
+                    } else if((prop == 'enablecheckforupdatesbutton' || prop == 'sendalltelemetryenabled') && d[prop] == 0){
                         rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('disabled')+'</td></tr>';
-                    } else if((prop == 'enablecheckforupdatesbutton' || prop == 'sendalltelemetryenabled' || prop == 'disableinsidercheckbox' ) && d[prop] == 1){
+                    } else if((prop == 'enablecheckforupdatesbutton' || prop == 'sendalltelemetryenabled') && d[prop] == 1){
+                        rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('enabled')+'</td></tr>';
+
+                    // Format enabled/disabled insider checkbox
+                    } else if(( prop == 'disableinsidercheckbox' ) && d[prop] == 1){
+                        rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('disabled')+'</td></tr>';
+                    } else if(( prop == 'disableinsidercheckbox' ) && d[prop] == 0){
                         rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('enabled')+'</td></tr>';
 
                     // Format helper tool

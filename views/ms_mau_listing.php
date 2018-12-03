@@ -110,8 +110,8 @@ new Ms_office_model;
 	        	
 	        	// Format insider box
 	        	var status=$('td:eq(5)', nRow).html();
-	        	status = status == 1 ? '<span class="label label-danger">'+i18n.t('enabled')+'</span>' :
-	        	(status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('disabled')+'</span>' : '')
+	        	status = status == 1 ? '<span class="label label-success">'+i18n.t('disabled')+'</span>' :
+	        	(status == 0 && status != '' ? '<span class="label label-danger">'+i18n.t('enabled')+'</span>' : '')
 	        	$('td:eq(5)', nRow).html(status)
 	        	
 	        	// Format helper tool

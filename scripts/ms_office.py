@@ -156,34 +156,72 @@ def get_msupdate_update_check(mau_update_items):
         return {}
 
 def get_mau_prefs():
-# Get system level preferences
+# Get system level preferences from /Library/ and config profiles
 
-    try:            
+    try:
+        if os.path.exists('/Library/Preferences/com.microsoft.autoupdate2.plist'):
+            mau_plist = FoundationPlist.readPlist("/Library/Preferences/com.microsoft.autoupdate2.plist")
+        else:
+            mau_plist = {}
+    
         mau_prefs = {}
-        if CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2'): mau_prefs['updatecache'] = CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2')
-        if CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2'): mau_prefs['channelname'] = CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2')
-        if CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2'): mau_prefs['howtocheck'] = CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2')
-        if CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2'): mau_prefs['manifestserver'] = CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2')
-        if CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2'): mau_prefs['lastcheckforupdates'] = CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2')
-        if CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2'): mau_prefs['lastservice'] = CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2')
-            
-        if CFPreferencesCopyAppValue('EnableCheckForUpdatesButton', 'com.microsoft.autoupdate2'):
+                
+        if 'UpdateCache' in mau_plist:
+            mau_prefs['updatecache'] = mau_plist['UpdateCache']
+        elif CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2'):
+            mau_prefs['updatecache'] = CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2')
+    
+        if 'ChannelName' in mau_plist:
+            mau_prefs['channelname'] = mau_plist['ChannelName']
+        elif CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2'):
+            mau_prefs['channelname'] = CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2')
+    
+        if 'HowToCheck' in mau_plist:
+            mau_prefs['howtocheck'] = mau_plist['HowToCheck']
+        elif CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2'):
+            mau_prefs['howtocheck'] = CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2')
+    
+        if 'ManifestServer' in mau_plist:
+            mau_prefs['manifestserver'] = mau_plist['ManifestServer']
+        elif CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2'):
+            mau_prefs['manifestserver'] = CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2')
+    
+        if 'LastUpdate' in mau_plist:
+            mau_prefs['lastcheckforupdates'] = mau_plist['LastUpdate']
+        elif CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2'):
+            mau_prefs['lastcheckforupdates'] = CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2')
+    
+        if 'LastService' in mau_plist:
+            mau_prefs['lastservice'] = mau_plist['LastService']
+        elif CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2'):
+            mau_prefs['lastservice'] = CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2')
+        
+        
+        if 'EnableCheckForUpdatesButton' in mau_plist:
+            mau_prefs['enablecheckforupdatesbutton'] = to_bool(mau_plist['EnableCheckForUpdatesButton'])
+        elif CFPreferencesCopyAppValue('EnableCheckForUpdatesButton', 'com.microsoft.autoupdate2'):
             mau_prefs['enablecheckforupdatesbutton'] = to_bool(CFPreferencesCopyAppValue('EnableCheckForUpdatesButton', 'com.microsoft.autoupdate2'))
         else:
             mau_prefs['enablecheckforupdatesbutton'] = 1
             
-        if CFPreferencesCopyAppValue('SendAllTelemetryEnabled', 'com.microsoft.autoupdate2'):
+        if 'SendAllTelemetryEnabled' in mau_plist:
+            mau_prefs['sendalltelemetryenabled'] = to_bool(mau_plist['SendAllTelemetryEnabled'])
+        elif CFPreferencesCopyAppValue('SendAllTelemetryEnabled', 'com.microsoft.autoupdate2'):
             mau_prefs['sendalltelemetryenabled'] = to_bool(CFPreferencesCopyAppValue('SendAllTelemetryEnabled', 'com.microsoft.autoupdate2'))
         else:
             mau_prefs['sendalltelemetryenabled'] = 1
             
-        if CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2'):
-            mau_prefs['disableinsidercheckbox'] = CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2')  
+        if 'DisableInsiderCheckbox' in mau_plist:
+            mau_prefs['disableinsidercheckbox'] = to_bool(mau_plist['DisableInsiderCheckbox'])
+        elif CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2'):
+            mau_prefs['disableinsidercheckbox'] = to_bool(CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2'))
         else:
             mau_prefs['disableinsidercheckbox'] = 0
             
-        if CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2'):
-            mau_prefs['startdaemononapplaunch'] = CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2')
+        if 'StartDaemonOnAppLaunch' in mau_plist:
+            mau_prefs['startdaemononapplaunch'] = to_bool(mau_plist['StartDaemonOnAppLaunch'])
+        elif CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2'):
+            mau_prefs['startdaemononapplaunch'] = to_bool(CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2'))
         else:
             mau_prefs['startdaemononapplaunch'] = 1
         
