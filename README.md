@@ -3,9 +3,12 @@ Microsoft Office Module
 
 Gets data about MS Office applications, licensing, and updates on the clients.
 
-To disable the msupdate binary parts, run the following on the client:
+## Notes
+
+On 10.14 and higher, the end users will get a prompt about allowing "supervisor" to have access to control "Microsoft AutoUpdate". The end users will either have to click "OK" to allow it or you will have to allow it with a TCC profile. Alternatively, you can disable the sections of the script that use the "Microsoft AutoUpdate" binary that triggers the prompt. To disable the msupdate binary parts, run the following on the client:
 `sudo defautls write org.munkireport.ms_office msupdate_check_disabled -bool true`
 `sudo defautls write org.munkireport.ms_office msupdate_config_disabled -bool true`
+
 
 * channelname - VARCHAR(255) - Name of the channel MAU uses to check for updates
 * howtocheck - VARCHAR(255) - How MAU checks for updates

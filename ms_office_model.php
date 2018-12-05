@@ -78,7 +78,7 @@ class Ms_office_model extends \Model
             foreach (array('channelname', 'howtocheck', 'lastcheckforupdates', 'manifestserver', 'o365_license_count', 'o365_detected', 'shared_o365_license', 'enablecheckforupdatesbutton', 'sendalltelemetryenabled', 'disableinsidercheckbox', 'startdaemononapplaunch', 'updatecache', 'vl_license_type', 'registeredapplications', 'mau_privilegedhelpertool', 'autoupdate_app_version', 'autoupdate_mas', 'excel_app_version', 'excel_mas', 'excel_office_generation', 'onedrive_app_version', 'onedrive_mas', 'onenote_app_version', 'onenote_mas', 'onenote_office_generation', 'outlook_app_version', 'outlook_mas', 'outlook_office_generation', 'powerpoint_app_version', 'powerpoint_mas', 'powerpoint_office_generation', 'remote_desktop_app_version', 'remote_desktop_mas', 'skype_for_business_app_version', 'skype_for_business_mas', 'word_app_version', 'word_mas', 'word_office_generation') as $item) {
                 // If registeredapplications key, process it
                 if ( array_key_exists($item, $plist) && $item == "registeredapplications" ) {
-                    $this->$item = json_encode($plist[$item]);        
+                    $this->$item = json_encode($plist[$item]);
                 }
                 // Else if key exists and value is zero, set the db value to zero
                 else if ( array_key_exists($item, $plist) && $plist[$item] === 0 ) {
