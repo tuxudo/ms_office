@@ -175,6 +175,8 @@ def get_mau_prefs():
             mau_prefs['channelname'] = mau_plist['ChannelName']
         elif CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2'):
             mau_prefs['channelname'] = CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2')
+        else:
+            mau_prefs['channelname'] = "Production"
     
         if 'HowToCheck' in mau_plist:
             mau_prefs['howtocheck'] = mau_plist['HowToCheck']
