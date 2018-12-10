@@ -7,7 +7,8 @@
 <div class="container">
     
   <div class="row">
-      <?php $widget->view($this, 'ms_mau_channel'); ?>
+    <?php $widget->view($this, 'ms_mau_channel'); ?>
+    <?php $widget->view($this, 'ms_version'); ?>
   </div> <!-- /row -->
     
   <div class="row">

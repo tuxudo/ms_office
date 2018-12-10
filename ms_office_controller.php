@@ -26,7 +26,7 @@ class Ms_office_controller extends Module_controller
     }
 
     /**
-    * Retrieve data in json format
+    * Retrieve MAU Channel data in json format
     *
     * @return void
     * @author joncrain
@@ -50,7 +50,33 @@ class Ms_office_controller extends Module_controller
                             ".get_machine_group_filter('');
         $obj->view('json', array('msg' => current($queryobj->query($sql))));
     }
-    
+
+    /**
+    * Retrieve license data in json format
+    *
+    * @return void
+    * @author joncrain
+    **/
+    public function get_license()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+  
+        $queryobj = new Ms_office_model();
+        $sql = "select COUNT(1) as total,
+                        COUNT(o365_license_count) AS 'o365',
+                        COUNT(CASE WHEN `vl_license_type` like '%Volume%' THEN 1 END) AS 'vl',
+                        COUNT(CASE WHEN `vl_license_type` like '%Home%' THEN 1 END) AS 'retail'
+                        from ms_office
+                        LEFT JOIN reportdata USING (serial_number)
+                        WHERE
+                            ".get_machine_group_filter('');
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+    }
+
     /**
     * Retrieve data in json format
     *

@@ -78,5 +78,11 @@
         "insider_fast": "Insider Fast",
         "insider_slow": "Insider Slow",
         "production": "Production"
-      }
+      },
+    "version_widget": {
+        "title": "Microsoft Office License Type",
+        "o365": "Office 365",
+        "vl": "Volume License",
+        "retail": "Retail License"
+    }
 }
