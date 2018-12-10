@@ -189,9 +189,11 @@ def get_mau_prefs():
             mau_prefs['manifestserver'] = CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2')
     
         if 'LastUpdate' in mau_plist:
-            mau_prefs['lastcheckforupdates'] = mau_plist['LastUpdate']
+            if mau_plist['LastUpdate'] != "Dec 29, 1 at 7:03:58 PM":
+                mau_prefs['lastcheckforupdates'] = mau_plist['LastUpdate']
         elif CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2'):
-            mau_prefs['lastcheckforupdates'] = CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2')
+            if CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2') != "Dec 29, 1 at 7:03:58 PM":
+                mau_prefs['lastcheckforupdates'] = CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2')
     
         if 'LastService' in mau_plist:
             mau_prefs['lastservice'] = mau_plist['LastService']

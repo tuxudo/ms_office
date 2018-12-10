@@ -8,7 +8,8 @@
     
   <div class="row">
     <?php $widget->view($this, 'ms_mau_channel'); ?>
-    <?php $widget->view($this, 'ms_version'); ?>
+    <?php $widget->view($this, 'ms_license_type'); ?>
+    <?php $widget->view($this, 'ms_how_to_check'); ?>
   </div> <!-- /row -->
     
   <div class="row">

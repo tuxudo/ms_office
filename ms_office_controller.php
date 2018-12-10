@@ -24,7 +24,33 @@ class Ms_office_controller extends Module_controller
     {
         echo "You've loaded the ms_office module!";
     }
-
+    
+    /**
+    * Retrieve MAU how to check data in json format
+    *
+    * @return void
+    * @author tuxudo
+    **/
+    public function get_how_to_check()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+  
+        $queryobj = new Ms_office_model();
+        $sql = "SELECT COUNT(1) as total,
+                        COUNT(CASE WHEN `howtocheck` = 'Manual' THEN 1 END) AS 'Manual',
+                        COUNT(CASE WHEN `howtocheck` = 'AutomaticCheck' THEN 1 END) AS 'AutomaticCheck',
+                        COUNT(CASE WHEN `howtocheck` = 'AutomaticDownload' THEN 1 END) AS 'AutomaticDownload'
+                        from ms_office
+                        LEFT JOIN reportdata USING (serial_number)
+                        WHERE
+                            ".get_machine_group_filter('');
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+    }
+    
     /**
     * Retrieve MAU Channel data in json format
     *
@@ -40,7 +66,7 @@ class Ms_office_controller extends Module_controller
         }
   
         $queryobj = new Ms_office_model();
-        $sql = "select COUNT(1) as total,
+        $sql = "SELECT COUNT(1) as total,
                         COUNT(CASE WHEN `channelname` = 'InsiderFast' THEN 1 END) AS 'InsiderFast',
                         COUNT(CASE WHEN `channelname` = 'External' THEN 1 END) AS 'InsiderSlow',
                         COUNT(CASE WHEN `channelname` = 'Production' THEN 1 END) AS 'Production'
@@ -57,7 +83,7 @@ class Ms_office_controller extends Module_controller
     * @return void
     * @author joncrain
     **/
-    public function get_license()
+    public function get_license_type()
     {
         $obj = new View();
         if (! $this->authorized()) {
@@ -66,8 +92,8 @@ class Ms_office_controller extends Module_controller
         }
   
         $queryobj = new Ms_office_model();
-        $sql = "select COUNT(1) as total,
-                        COUNT(o365_license_count) AS 'o365',
+        $sql = "SELECT COUNT(1) as total,
+                        COUNT(o365_detected) AS 'o365',
                         COUNT(CASE WHEN `vl_license_type` like '%Volume%' THEN 1 END) AS 'vl',
                         COUNT(CASE WHEN `vl_license_type` like '%Home%' THEN 1 END) AS 'retail'
                         from ms_office
@@ -92,7 +118,7 @@ class Ms_office_controller extends Module_controller
         }
         
         $queryobj = new Ms_office_model();
-        $sql = "select COUNT(CASE WHEN `word_office_generation` = '2016' THEN 1 END) AS 'word_gen_2016',
+        $sql = "SELECT COUNT(CASE WHEN `word_office_generation` = '2016' THEN 1 END) AS 'word_gen_2016',
                     COUNT(CASE WHEN `word_office_generation` = '2019' THEN 1 END) AS 'word_gen_2019',
                     COUNT(CASE WHEN `excel_office_generation` = '2016' THEN 1 END) AS 'excel_gen_2016',
                     COUNT(CASE WHEN `excel_office_generation` = '2019' THEN 1 END) AS 'excel_gen_2019',

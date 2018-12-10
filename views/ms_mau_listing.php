@@ -99,7 +99,7 @@ new Ms_office_model;
 	        	if (! isNaN(updatecheck) && updatecheck !== ""){
 	        	    parseInt(updatecheck);
 	        	    var date = new Date(updatecheck * 1000);
-	        	    $('td:eq(2)', nRow).html('<span title="'+moment(date).format('llll')+'">'+moment(date).fromNow()+'</span>');
+	        	    $('td:eq(2)', nRow).html('<span title="'+moment(date).fromNow()+'">'+moment(date).format('llll')+'</span>');
 	        	}
 
 	        	// Format update button

@@ -79,10 +79,16 @@
         "insider_slow": "Insider Slow",
         "production": "Production"
       },
-    "version_widget": {
+    "license_type_widget": {
         "title": "Microsoft Office License Type",
         "o365": "Office 365",
         "vl": "Volume License",
         "retail": "Retail License"
+    },
+    "how_to_check_widget": {
+        "title": "MAU How to Check",
+        "manual": "Manual",
+        "automatic_check": "Automatic Check",
+        "automatic_download": "Automatic Download"
     }
 }
