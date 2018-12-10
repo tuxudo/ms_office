@@ -118,14 +118,18 @@ class Ms_office_controller extends Module_controller
         }
         
         $queryobj = new Ms_office_model();
-        $sql = "SELECT COUNT(CASE WHEN `word_office_generation` = '2016' THEN 1 END) AS 'word_gen_2016',
+        $sql = "SELECT COUNT(CASE WHEN `word_office_generation` = '2011' THEN 1 END) AS 'word_gen_2011',
+                    COUNT(CASE WHEN `word_office_generation` = '2016' THEN 1 END) AS 'word_gen_2016',
                     COUNT(CASE WHEN `word_office_generation` = '2019' THEN 1 END) AS 'word_gen_2019',
+                    COUNT(CASE WHEN `excel_office_generation` = '2011' THEN 1 END) AS 'excel_gen_2011',
                     COUNT(CASE WHEN `excel_office_generation` = '2016' THEN 1 END) AS 'excel_gen_2016',
                     COUNT(CASE WHEN `excel_office_generation` = '2019' THEN 1 END) AS 'excel_gen_2019',
+                    COUNT(CASE WHEN `powerpoint_office_generation` = '2011' THEN 1 END) AS 'powerpoint_gen_2011',
                     COUNT(CASE WHEN `powerpoint_office_generation` = '2016' THEN 1 END) AS 'powerpoint_gen_2016',
                     COUNT(CASE WHEN `powerpoint_office_generation` = '2019' THEN 1 END) AS 'powerpoint_gen_2019',
+                    COUNT(CASE WHEN `outlook_office_generation` = '2011' THEN 1 END) AS 'outlook_gen_2011',
                     COUNT(CASE WHEN `outlook_office_generation` = '2016' THEN 1 END) AS 'outlook_gen_2016',
-                    COUNT(CASE WHEN `powerpoint_office_generation` = '2019' THEN 1 END) AS 'outlook_gen_2019',
+                    COUNT(CASE WHEN `outlook_office_generation` = '2019' THEN 1 END) AS 'outlook_gen_2019',
                     COUNT(CASE WHEN `onenote_office_generation` = '2016' THEN 1 END) AS 'onenote_gen_2016',
                     COUNT(CASE WHEN `onenote_office_generation` = '2019' THEN 1 END) AS 'onenote_gen_2019'
                     FROM ms_office

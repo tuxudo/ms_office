@@ -21,19 +21,30 @@ $(document).on('appUpdate', function(e, lang) {
 
     $.getJSON( appUrl + '/module/ms_office/get_channel', function( data ) {
         if(data.error){
-        //alert(data.error);
-        return;
+            //alert(data.error);
+            return;
         }
 
         var panel = $('#ms_mau_channel-widget div.panel-body'),
         baseUrl = appUrl + '/show/listing/ms_office/ms_mau/#';
         panel.empty();
-        // Set statuses
-        panel.append(' <a href="'+baseUrl+'Production" class="btn btn-success"><span class="bigger-150">'+data.Production+'</span><br>'+i18n.t('ms_office.mau_channel_widget.production')+'</a>');
-        panel.append(' <a href="'+baseUrl+'InsiderSlow" class="btn btn-warning"><span class="bigger-150">'+data.InsiderSlow+'</span><br>'+i18n.t('ms_office.mau_channel_widget.insider_slow')+'</a>');
-        panel.append(' <a href="'+baseUrl+'InsiderFast" class="btn btn-danger"><span class="bigger-150">'+data.InsiderFast+'</span><br>'+i18n.t('ms_office.mau_channel_widget.insider_fast')+'</a>');
+        // Set blocks, disable if zero
+        if(data.InsiderFast != "0"){
+            panel.append(' <a href="'+baseUrl+'InsiderFast" class="btn btn-danger"><span class="bigger-150">'+data.InsiderFast+'</span><br>'+i18n.t('ms_office.mau_channel_widget.insider_fast')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'InsiderFast" class="btn btn-danger disabled"><span class="bigger-150">'+data.InsiderFast+'</span><br>'+i18n.t('ms_office.mau_channel_widget.insider_fast')+'</a>');
+        }
+        if(data.InsiderSlow != "0"){
+            panel.append(' <a href="'+baseUrl+'InsiderSlow" class="btn btn-warning"><span class="bigger-150">'+data.InsiderSlow+'</span><br>'+i18n.t('ms_office.mau_channel_widget.insider_slow')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'InsiderSlow" class="btn btn-warning disabled"><span class="bigger-150">'+data.InsiderSlow+'</span><br>'+i18n.t('ms_office.mau_channel_widget.insider_slow')+'</a>');
+        }
+        if(data.Production != "0"){
+            panel.append(' <a href="'+baseUrl+'Production" class="btn btn-success"><span class="bigger-150">'+data.Production+'</span><br>'+i18n.t('ms_office.mau_channel_widget.production')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'Production" class="btn btn-success disabled"><span class="bigger-150">'+data.Production+'</span><br>'+i18n.t('ms_office.mau_channel_widget.production')+'</a>');
+        }
     });
-
 });
 
 </script>

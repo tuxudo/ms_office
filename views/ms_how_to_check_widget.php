@@ -15,17 +15,29 @@ $(document).on('appUpdate', function(e, lang) {
 
     $.getJSON( appUrl + '/module/ms_office/get_how_to_check', function( data ) {
         if(data.error){
-        //alert(data.error);
-        return;
+            //alert(data.error);
+            return;
         }
 
         var panel = $('#ms_how_to_check-widget div.panel-body'),
         baseUrl = appUrl + '/show/listing/ms_office/ms_mau/#';
         panel.empty();
         // Set blocks
-        panel.append(' <a href="'+baseUrl+'Manual" class="btn btn-success"><span class="bigger-150">'+data.Manual+'</span><br>'+i18n.t('ms_office.how_to_check_widget.manual')+'</a>');
-        panel.append(' <a href="'+baseUrl+'AutomaticCheck" class="btn btn-warning"><span class="bigger-150">'+data.AutomaticCheck+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_check')+'</a>');
-        panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger"><span class="bigger-150">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
+        if(data.AutomaticDownload != "0"){
+            panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger"><span class="bigger-150">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger"><span class="bigger-150 disabled">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
+        }
+        if(data.AutomaticCheck != "0"){
+            panel.append(' <a href="'+baseUrl+'AutomaticCheck" class="btn btn-warning"><span class="bigger-150">'+data.AutomaticCheck+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_check')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'AutomaticCheck" class="btn btn-warning disabled"><span class="bigger-150">'+data.AutomaticCheck+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_check')+'</a>');
+        }
+        if(data.Manual != "0"){
+            panel.append(' <a href="'+baseUrl+'Manual" class="btn btn-success"><span class="bigger-150">'+data.Manual+'</span><br>'+i18n.t('ms_office.how_to_check_widget.manual')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'Manual" class="btn btn-success disabled"><span class="bigger-150">'+data.Manual+'</span><br>'+i18n.t('ms_office.how_to_check_widget.manual')+'</a>');
+        }
     });
 
 });

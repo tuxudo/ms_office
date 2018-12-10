@@ -260,9 +260,19 @@ def vl_license_detect():
             vl_license = "Office 2019 Home and Student License"
 
         return {"vl_license_type":vl_license}
+    
+    elif os.path.exists('/Library/Preferences/com.microsoft.office.licensing.plist'):
+        office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist').read()
+        
+        if 'A7vRjN2l/dCJHZOm8LKan1E3WP6ExkrygJtGyujbPR' in office_vl:
+            vl_license = "Office 2011 Volume License"
+        else:
+            vl_license = "Office 2011 License"
+            
+        return {"vl_license_type":vl_license}  
     else:
         return {}
-    
+        
 def o365_license_detect():
 # Check all users' home folders for Office 365 license
 
@@ -304,7 +314,11 @@ def get_app_data(app_path):
     
     # Read in Info.plist for processing 
     try:
-        info_plist = FoundationPlist.readPlist(app_path+"/Contents/Info.plist")
+        if os.path.exists(app_path+"/Contents/Info.plist"):
+            info_plist = FoundationPlist.readPlist(app_path+"/Contents/Info.plist")
+        else:
+            info_plist = FoundationPlist.readPlist(app_path.replace("Applications", "Applications/Microsoft Office 2011/")+"/Contents/Info.plist")
+         
         app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" ", "_").lower()
         
         app_data = {}
@@ -315,8 +329,10 @@ def get_app_data(app_path):
             
         gencheck = '.'.join(info_plist['CFBundleShortVersionString'].split(".")[:2])
         
-        # Check generation of Office 
-        if (15.11 <= float(gencheck) <= 16.16) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+        # Check generation of Office
+        if (14.7 >= float(gencheck)) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+            app_data[app_name+'_office_generation'] = 2011
+        elif (15.11 <= float(gencheck) <= 16.16) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2016
         elif (16.17 <= float(gencheck)) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2019
@@ -409,45 +425,35 @@ def main():
         if sys.argv[1] == 'manualcheck':
             print 'Manual check: skipping'
             exit(0)
-
-    # If less than 10.10 (because we don't support Office 2011 or older), skip and write empty file
-    if getOsVersion() < 10:
-        
-        result = dict()
-        # Write results to cache
-        output_plist = os.path.join(cachedir, 'ms_office.plist')
-        plistlib.writePlist(result, output_plist)
-        
-    else :
             
-        # Get results
-        result = dict()
-        
-        # Check if we should run the msupdate parts, some people may want them disabled 
-        msupdate_config_disabled = to_bool(CFPreferencesCopyAppValue('msupdate_config_disabled', 'org.munkireport.ms_office'))
-        if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_config_disabled != 1:
-            msupdate_config = get_msupdate_config()
-        else:
-            msupdate_config = {}
+    # Get results
+    result = dict()
 
-        result = merge_two_dicts(msupdate_config, get_mau_prefs())
-        result = merge_two_dicts(result, vl_license_detect())
-        result = merge_two_dicts(result, o365_license_detect())
-        result = merge_two_dicts(result, shared_o365_license_detect())
-        result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Excel.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/Microsoft PowerPoint.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Outlook.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/Microsoft OneNote.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Remote Desktop.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Word.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/OneDrive.app"))
-        result = merge_two_dicts(result, get_app_data("/Applications/Skype for Business.app"))
-        result = merge_two_dicts(result, get_app_data("/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app"))
-   
-        # Write memory results to cache
-        output_plist = os.path.join(cachedir, 'ms_office.plist')
-        FoundationPlist.writePlist(result, output_plist)
-#        print FoundationPlist.writePlistToString(result)
+    # Check if we should run the msupdate parts, some people may want them disabled 
+    msupdate_config_disabled = to_bool(CFPreferencesCopyAppValue('msupdate_config_disabled', 'org.munkireport.ms_office'))
+    if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_config_disabled != 1:
+        msupdate_config = get_msupdate_config()
+    else:
+        msupdate_config = {}
+
+    result = merge_two_dicts(msupdate_config, get_mau_prefs())
+    result = merge_two_dicts(result, vl_license_detect())
+    result = merge_two_dicts(result, o365_license_detect())
+    result = merge_two_dicts(result, shared_o365_license_detect())
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Excel.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft PowerPoint.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Outlook.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft OneNote.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Remote Desktop.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Word.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/OneDrive.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Skype for Business.app"))
+    result = merge_two_dicts(result, get_app_data("/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app"))
+
+    # Write memory results to cache
+    output_plist = os.path.join(cachedir, 'ms_office.plist')
+    FoundationPlist.writePlist(result, output_plist)
+#    print FoundationPlist.writePlistToString(result)
 
 if __name__ == "__main__":
     main()

@@ -22,10 +22,22 @@ $(document).on('appUpdate', function(e, lang) {
         var panel = $('#ms_license_type-widget div.panel-body'),
         baseUrl = appUrl + '/show/listing/ms_office/ms_office';
         panel.empty();
-        // Set statuses
-        panel.append(' <a href="'+baseUrl+'" class="btn btn-info"><span class="bigger-150">'+data.o365+'</span><br>'+i18n.t('ms_office.license_type_widget.o365')+'</a>');
-        panel.append(' <a href="'+baseUrl+'#Volume" class="btn btn-info"><span class="bigger-150">'+data.vl+'</span><br>'+i18n.t('ms_office.license_type_widget.vl')+'</a>');
-        panel.append(' <a href="'+baseUrl+'#Retail" class="btn btn-info "><span class="bigger-150">'+data.retail+'</span><br>'+i18n.t('ms_office.license_type_widget.retail')+'</a>');
+        // Set blocks, disable if zero
+        if(data.o365 != "0"){
+            panel.append(' <a href="'+baseUrl+'" class="btn btn-info"><span class="bigger-150">'+data.o365+'</span><br>'+i18n.t('ms_office.license_type_widget.o365')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'" class="btn btn-info disabled"><span class="bigger-150">'+data.o365+'</span><br>'+i18n.t('ms_office.license_type_widget.o365')+'</a>');
+        }
+        if(data.vl != "0"){
+            panel.append(' <a href="'+baseUrl+'#Volume" class="btn btn-info"><span class="bigger-150">'+data.vl+'</span><br>'+i18n.t('ms_office.license_type_widget.vl')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'#Volume" class="btn btn-info disabled"><span class="bigger-150">'+data.vl+'</span><br>'+i18n.t('ms_office.license_type_widget.vl')+'</a>');
+        }
+        if(data.retail != "0"){
+            panel.append(' <a href="'+baseUrl+'#Retail" class="btn btn-info"><span class="bigger-150">'+data.retail+'</span><br>'+i18n.t('ms_office.license_type_widget.retail')+'</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'#Retail" class="btn btn-info disabled"><span class="bigger-150">'+data.retail+'</span><br>'+i18n.t('ms_office.license_type_widget.retail')+'</a>');
+        }
     });
 
 });

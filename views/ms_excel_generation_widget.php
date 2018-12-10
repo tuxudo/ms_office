@@ -22,11 +22,23 @@ $(document).on('appUpdate', function(e, lang) {
         var panel = $('#ms_excel_generation-widget div.panel-body'),
         baseUrl = appUrl + '/show/listing/ms_office/ms_office/#';
         panel.empty();
-        // Set statuses
-        panel.append(' <a href="'+baseUrl+'2019" class="btn btn-success"><span class="bigger-150">'+data.excel_gen_2019+'</span><br>&nbsp;&nbsp;2019&nbsp;&nbsp;</a>');
-        panel.append(' <a href="'+baseUrl+'2016" class="btn btn-warning"><span class="bigger-150">'+data.excel_gen_2016+'</span><br>&nbsp;&nbsp;2016&nbsp;&nbsp;</a>');
+        // Set blocks, disable if zero
+        if(data.excel_gen_2011 != "0"){
+            panel.append(' <a href="'+baseUrl+'2011" class="btn btn-danger"><span class="bigger-150">'+data.excel_gen_2011+'</span><br>&nbsp;&nbsp;2011&nbsp;&nbsp;</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'2011" class="btn btn-danger disabled"><span class="bigger-150">'+data.excel_gen_2011+'</span><br>&nbsp;&nbsp;2011&nbsp;&nbsp;</a>');
+        }
+        if(data.excel_gen_2016 != "0"){
+            panel.append(' <a href="'+baseUrl+'2016" class="btn btn-warning"><span class="bigger-150">'+data.excel_gen_2016+'</span><br>&nbsp;&nbsp;2016&nbsp;&nbsp;</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'2016" class="btn btn-warning disabled"><span class="bigger-150">'+data.excel_gen_2016+'</span><br>&nbsp;&nbsp;2016&nbsp;&nbsp;</a>');
+        }
+        if(data.excel_gen_2019 != "0"){
+            panel.append(' <a href="'+baseUrl+'2019" class="btn btn-success"><span class="bigger-150">'+data.excel_gen_2019+'</span><br>&nbsp;&nbsp;2019&nbsp;&nbsp;</a>');
+        } else {
+            panel.append(' <a href="'+baseUrl+'2019" class="btn btn-success disabled"><span class="bigger-150">'+data.excel_gen_2019+'</span><br>&nbsp;&nbsp;2019&nbsp;&nbsp;</a>');
+        }
     });
-
 });
 
 </script>
