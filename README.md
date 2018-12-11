@@ -9,7 +9,8 @@ On 10.14 and higher, the end users will get a prompt about allowing "supervisor"
 `sudo defautls write org.munkireport.ms_office msupdate_check_disabled -bool true`
 `sudo defautls write org.munkireport.ms_office msupdate_config_disabled -bool true`
 
-
+Table Schema
+------
 * channelname - VARCHAR(255) - Name of the channel MAU uses to check for updates
 * howtocheck - VARCHAR(255) - How MAU checks for updates
 * lastcheckforupdates - VARCHAR(255) - Local time of client when MAU last checked for updates

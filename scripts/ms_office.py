@@ -316,9 +316,11 @@ def get_app_data(app_path):
     try:
         if os.path.exists(app_path+"/Contents/Info.plist"):
             info_plist = FoundationPlist.readPlist(app_path+"/Contents/Info.plist")
-        else:
+        elif ( "Excel" in app_path or "Outlook" in app_path or "PowerPoint" in app_path or "Word" in app_path ) and os.path.exists(app_path.replace("Applications", "Applications/Microsoft Office 2011/")+"/Contents/Info.plist"):
             info_plist = FoundationPlist.readPlist(app_path.replace("Applications", "Applications/Microsoft Office 2011/")+"/Contents/Info.plist")
-         
+        else:
+             return {}
+            
         app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" ", "_").lower()
         
         app_data = {}
@@ -338,8 +340,11 @@ def get_app_data(app_path):
             app_data[app_name+'_office_generation'] = 2019
         
         # Check if app is a Mac App Store app
-        if os.path.exists(app_path+"/Contents/_MASReceipt"):
+        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name:
             app_data[app_name+'_mas'] = 1
+        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name:
+            # Do nothing as app is an Office 2011 app
+            pass
         else:
             app_data[app_name+'_mas'] = 0
             

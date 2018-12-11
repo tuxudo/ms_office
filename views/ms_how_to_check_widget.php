@@ -22,7 +22,7 @@ $(document).on('appUpdate', function(e, lang) {
         var panel = $('#ms_how_to_check-widget div.panel-body'),
         baseUrl = appUrl + '/show/listing/ms_office/ms_mau/#';
         panel.empty();
-        // Set blocks
+        // Set blocks, disable if zero
         if(data.AutomaticDownload != "0"){
             panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger"><span class="bigger-150">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
         } else {
