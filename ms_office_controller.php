@@ -109,6 +109,42 @@ class Ms_office_controller extends Module_controller
     * @return void
     * @author tuxudo
     **/
+    public function get_mas()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+        
+        $queryobj = new Ms_office_model();
+        $sql = "SELECT COUNT(CASE WHEN `excel_mas` = '1' THEN 1 END) AS 'excel_mas_yes',
+                    COUNT(CASE WHEN `excel_mas` = '0' THEN 1 END) AS 'excel_mas_no',
+                    COUNT(CASE WHEN `onedrive_mas` = '1' THEN 1 END) AS 'onedrive_mas_yes',
+                    COUNT(CASE WHEN `onedrive_mas` = '0' THEN 1 END) AS 'onedrive_mas_no',
+                    COUNT(CASE WHEN `onenote_mas` = '1' THEN 1 END) AS 'onenote_mas_yes',
+                    COUNT(CASE WHEN `onenote_mas` = '0' THEN 1 END) AS 'onenote_mas_no',
+                    COUNT(CASE WHEN `outlook_mas` = '1' THEN 1 END) AS 'outlook_mas_yes',
+                    COUNT(CASE WHEN `outlook_mas` = '0' THEN 1 END) AS 'outlook_mas_no',
+                    COUNT(CASE WHEN `powerpoint_mas` = '1' THEN 1 END) AS 'powerpoint_mas_yes',
+                    COUNT(CASE WHEN `powerpoint_mas` = '0' THEN 1 END) AS 'powerpoint_mas_no',
+                    COUNT(CASE WHEN `remote_desktop_mas` = '1' THEN 1 END) AS 'remote_desktop_mas_yes',
+                    COUNT(CASE WHEN `remote_desktop_mas` = '0' THEN 1 END) AS 'remote_desktop_mas_no',
+                    COUNT(CASE WHEN `word_mas` = '1' THEN 1 END) AS 'word_mas_yes',
+                    COUNT(CASE WHEN `word_mas` = '0' THEN 1 END) AS 'word_mas_no'
+                    FROM ms_office
+                    LEFT JOIN reportdata USING (serial_number)
+                    WHERE
+						".get_machine_group_filter('');
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+    }
+    
+    /**
+    * Retrieve data in json format
+    *
+    * @return void
+    * @author tuxudo
+    **/
     public function get_generation()
     {
         $obj = new View();

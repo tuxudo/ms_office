@@ -17,6 +17,13 @@ return array(
         'ms_mau_channel' => array('view' => 'ms_mau_channel_widget', 'i18n' => 'ms_office.mau_channel_widget.title'),
         'ms_license_type' => array('view' => 'ms_license_type_widget', 'i18n' => 'ms_office.license_type_widget.title'),
         'ms_how_to_check' => array('view' => 'ms_how_to_check_widget', 'i18n' => 'ms_office.how_to_check_widget.title'),
+        'ms_onenote_mas' => array('view' => 'ms_onenote_mas_widget', 'i18n' => 'ms_office.onenote_mas'),
+        'ms_outlook_mas' => array('view' => 'ms_outlook_mas_widget', 'i18n' => 'ms_office.outlook_mas'),
+        'ms_onedrive_mas' => array('view' => 'ms_onedrive_mas_widget', 'i18n' => 'ms_office.onedrive_mas'),
+        'ms_excel_mas' => array('view' => 'ms_excel_mas_widget', 'i18n' => 'ms_office.excel_mas'),
+        'ms_word_mas' => array('view' => 'ms_word_mas_widget', 'i18n' => 'ms_office.word_mas'),
+        'ms_powerpoint_mas' => array('view' => 'ms_powerpoint_mas_widget', 'i18n' => 'ms_office.powerpoint_mas'),
+        'ms_remote_desktop_mas' => array('view' => 'ms_remote_desktop_mas_widget', 'i18n' => 'ms_office.remote_desktop_mas'),
     ),
     'reports' => array(
         'ms_office_report' => array('view' => 'ms_office_report', 'i18n' => 'ms_office.report'),

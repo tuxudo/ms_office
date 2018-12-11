@@ -340,9 +340,9 @@ def get_app_data(app_path):
             app_data[app_name+'_office_generation'] = 2019
         
         # Check if app is a Mac App Store app
-        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name:
+        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name:
             app_data[app_name+'_mas'] = 1
-        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name:
+        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name:
             # Do nothing as app is an Office 2011 app
             pass
         else:

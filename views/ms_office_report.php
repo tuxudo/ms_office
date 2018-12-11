@@ -21,6 +21,19 @@
   <div class="row">
       <?php $widget->view($this, 'ms_outlook_generation'); ?>
       <?php $widget->view($this, 'ms_onenote_generation'); ?>
+      <?php $widget->view($this, 'ms_remote_desktop_mas'); ?>
+  </div> <!-- /row -->
+    
+  <div class="row">
+      <?php $widget->view($this, 'ms_word_mas'); ?>
+      <?php $widget->view($this, 'ms_powerpoint_mas'); ?>
+      <?php $widget->view($this, 'ms_excel_mas'); ?>
+  </div> <!-- /row -->
+    
+  <div class="row">
+      <?php $widget->view($this, 'ms_outlook_mas'); ?>
+      <?php $widget->view($this, 'ms_onenote_mas'); ?>
+      <?php $widget->view($this, 'ms_onedrive_mas'); ?>
   </div> <!-- /row -->
     
 </div>  <!-- /container -->
