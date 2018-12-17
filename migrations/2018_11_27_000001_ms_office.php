@@ -13,7 +13,7 @@ class Msoffice extends Migration
             $table->string('serial_number')->unique();
             $table->string('channelname')->nullable();
             $table->string('howtocheck')->nullable();
-            $table->bigint('lastcheckforupdates')->nullable();
+            $table->bigInteger('lastcheckforupdates')->nullable();
             $table->string('manifestserver')->nullable();
             $table->integer('o365_license_count')->nullable();
             $table->boolean('o365_detected')->nullable();
