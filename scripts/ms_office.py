@@ -14,7 +14,6 @@ import sys
 import time
 import platform
 import string
-#import re
 
 sys.path.insert(0, '/usr/local/munki')
 
@@ -80,7 +79,9 @@ def get_msupdate_config():
             elif item == 'HowToCheck':
                 mau_config_items['howtocheck'] = mau_config[item]
             elif item == 'LastCheckForUpdates':
-                mau_config_items['lastcheckforupdates'] = mau_config[item]
+                if mau_config[item] != "Dec 29, 1 at 7:03:58 PM":
+                    pattern = '%b %d, %Y, %I:%M:%S %p'
+                    mau_config_items['lastcheckforupdates'] = int(time.mktime(time.strptime(mau_config[item].replace(" at ", ", "), pattern)))
             elif item == 'StartDaemonOnAppLaunch':
                 mau_config_items['startdaemononapplaunch'] = to_bool(mau_config[item])
 
@@ -190,16 +191,17 @@ def get_mau_prefs():
     
         if 'LastUpdate' in mau_plist:
             if mau_plist['LastUpdate'] != "Dec 29, 1 at 7:03:58 PM":
-                mau_prefs['lastcheckforupdates'] = mau_plist['LastUpdate']
+                pattern = '%b %d, %Y, %I:%M:%S %p'
+                mau_prefs['lastcheckforupdates'] = int(time.mktime(time.strptime(mau_plist['LastUpdate'].replace(" at ", ", "), pattern)))
         elif CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2'):
             if CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2') != "Dec 29, 1 at 7:03:58 PM":
-                mau_prefs['lastcheckforupdates'] = CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2')
+                pattern = '%b %d, %Y, %I:%M:%S %p'
+                mau_prefs['lastcheckforupdates'] = int(time.mktime(time.strptime(mau_plist['LastUpdate'].replace(" at ", ", "), pattern)))
     
         if 'LastService' in mau_plist:
             mau_prefs['lastservice'] = mau_plist['LastService']
         elif CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2'):
             mau_prefs['lastservice'] = CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2')
-        
         
         if 'EnableCheckForUpdatesButton' in mau_plist:
             mau_prefs['enablecheckforupdatesbutton'] = to_bool(mau_plist['EnableCheckForUpdatesButton'])
@@ -324,7 +326,7 @@ def get_app_data(app_path):
         app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" ", "_").lower()
         
         app_data = {}
-        if "remote_desktop" in app_name or "onedrive" in app_name:
+        if "remote_desktop" in app_name or "onedrive" in app_name or "teams" in app_name:
             app_data[app_name+'_app_version'] = info_plist['CFBundleShortVersionString']
         else:
             app_data[app_name+'_app_version'] = info_plist['CFBundleVersion']
@@ -351,11 +353,6 @@ def get_app_data(app_path):
         return app_data
     except Exception:
         return {}
-    
-def getOsVersion():
-    """Returns the minor OS version."""
-    os_version_tuple = platform.mac_ver()[0].split('.')
-    return int(os_version_tuple[1])
 
 def to_bool(s):
     if s == True:
@@ -452,6 +449,7 @@ def main():
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Remote Desktop.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Word.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/OneDrive.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Teams.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Skype for Business.app"))
     result = merge_two_dicts(result, get_app_data("/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app"))
 

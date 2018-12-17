@@ -47,6 +47,8 @@ class Ms_office_model extends \Model
         $this->rs['word_app_version'] = '';
         $this->rs['word_mas'] = '';
         $this->rs['word_office_generation'] = '';
+        $this->rs['teams_app_version'] = '';
+        $this->rs['teams_mas'] = '';
         
         if ($serial) {
             $this->retrieve_record($serial);
@@ -75,7 +77,7 @@ class Ms_office_model extends \Model
             $parser->parse($data, CFPropertyList::FORMAT_XML);
             $plist = $parser->toArray();
 
-            foreach (array('channelname', 'howtocheck', 'lastcheckforupdates', 'manifestserver', 'o365_license_count', 'o365_detected', 'shared_o365_license', 'enablecheckforupdatesbutton', 'sendalltelemetryenabled', 'disableinsidercheckbox', 'startdaemononapplaunch', 'updatecache', 'vl_license_type', 'registeredapplications', 'mau_privilegedhelpertool', 'autoupdate_app_version', 'autoupdate_mas', 'excel_app_version', 'excel_mas', 'excel_office_generation', 'onedrive_app_version', 'onedrive_mas', 'onenote_app_version', 'onenote_mas', 'onenote_office_generation', 'outlook_app_version', 'outlook_mas', 'outlook_office_generation', 'powerpoint_app_version', 'powerpoint_mas', 'powerpoint_office_generation', 'remote_desktop_app_version', 'remote_desktop_mas', 'skype_for_business_app_version', 'skype_for_business_mas', 'word_app_version', 'word_mas', 'word_office_generation') as $item) {
+            foreach (array('channelname', 'howtocheck', 'lastcheckforupdates', 'manifestserver', 'o365_license_count', 'o365_detected', 'shared_o365_license', 'enablecheckforupdatesbutton', 'sendalltelemetryenabled', 'disableinsidercheckbox', 'startdaemononapplaunch', 'updatecache', 'vl_license_type', 'registeredapplications', 'mau_privilegedhelpertool', 'autoupdate_app_version', 'autoupdate_mas', 'excel_app_version', 'excel_mas', 'excel_office_generation', 'onedrive_app_version', 'onedrive_mas', 'onenote_app_version', 'onenote_mas', 'onenote_office_generation', 'outlook_app_version', 'outlook_mas', 'outlook_office_generation', 'powerpoint_app_version', 'powerpoint_mas', 'powerpoint_office_generation', 'remote_desktop_app_version', 'remote_desktop_mas', 'skype_for_business_app_version', 'skype_for_business_mas', 'word_app_version', 'word_mas', 'word_office_generation', 'teams_app_version', 'teams_mas') as $item) {
                 // If registeredapplications key, process it
                 if ( array_key_exists($item, $plist) && $item == "registeredapplications" ) {
                     $this->$item = json_encode($plist[$item]);

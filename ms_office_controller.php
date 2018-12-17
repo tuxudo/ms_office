@@ -120,6 +120,8 @@ class Ms_office_controller extends Module_controller
         $queryobj = new Ms_office_model();
         $sql = "SELECT COUNT(CASE WHEN `excel_mas` = '1' THEN 1 END) AS 'excel_mas_yes',
                     COUNT(CASE WHEN `excel_mas` = '0' THEN 1 END) AS 'excel_mas_no',
+                    COUNT(CASE WHEN `teams_mas` = '1' THEN 1 END) AS 'teams_mas_yes',
+                    COUNT(CASE WHEN `teams_mas` = '0' THEN 1 END) AS 'teams_mas_no',
                     COUNT(CASE WHEN `onedrive_mas` = '1' THEN 1 END) AS 'onedrive_mas_yes',
                     COUNT(CASE WHEN `onedrive_mas` = '0' THEN 1 END) AS 'onedrive_mas_no',
                     COUNT(CASE WHEN `onenote_mas` = '1' THEN 1 END) AS 'onenote_mas_yes',
@@ -190,7 +192,7 @@ class Ms_office_controller extends Module_controller
             return;
         }
         
-        $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `o365_license_count`, `o365_detected`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `skype_for_business_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `registeredapplications`
+        $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `o365_license_count`, `o365_detected`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `teams_app_version`, `teams_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `registeredapplications`
                         FROM ms_office 
                         WHERE serial_number = '$serial_number'";
         

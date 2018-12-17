@@ -39,11 +39,12 @@ new Ms_office_model;
 		        <th data-i18n="ms_office.onedrive_mas_short" data-colname='ms_office.onedrive_mas'></th>
 		        <th data-i18n="ms_office.remote_desktop_app_version" data-colname='ms_office.remote_desktop_app_version'></th>
 		        <th data-i18n="ms_office.remote_desktop_mas_short" data-colname='ms_office.remote_desktop_mas'></th>
+		        <th data-i18n="ms_office.teams_app_version" data-colname='ms_office.teams_app_version'></th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<tr>
-		    	     <td data-i18n="listing.loading" colspan="24" class="dataTables_empty"></td>
+		    	     <td data-i18n="listing.loading" colspan="25" class="dataTables_empty"></td>
 		    	</tr>
 		    </tbody>
 		  </table>

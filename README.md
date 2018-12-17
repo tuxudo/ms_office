@@ -13,7 +13,7 @@ Table Schema
 ------
 * channelname - VARCHAR(255) - Name of the channel MAU uses to check for updates
 * howtocheck - VARCHAR(255) - How MAU checks for updates
-* lastcheckforupdates - VARCHAR(255) - Local time of client when MAU last checked for updates
+* lastcheckforupdates - bigint - Local time of client when MAU last checked for updates, in UNIX time
 * manifestserver - VARCHAR(255) - Manifest server MAU uses, if set
 * o365_license_count - INT(11) - How many Office 365 license were counted on client
 * o365_detected - boolean - If at least one Office 365 license was detected
@@ -49,4 +49,6 @@ Table Schema
 * word_app_version - VARCHAR(255) - Word version
 * word_mas - boolean - If Word is from MAS
 * word_office_generation - INT(11) - Word generation (2016/2019)
+* teams_app_version - VARCHAR(255) - Teams version
+* teams_mas - boolean - If Teams is from MAS
 

@@ -16,6 +16,7 @@ $(document).on('appReady', function(){
 			var rows_outlook = ''
 			var rows_onenote = ''
 			var rows_onedrive = ''
+			var rows_teams = ''
 			var rows_reportdestkop = ''
 			var rows_sfb = ''
 			var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
@@ -103,6 +104,12 @@ $(document).on('appReady', function(){
                         rows_sfb = rows_sfb + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('no')+'</td></tr>';
                     } else if((prop == "skype_for_business_mas") && d[prop] == 1){
                         rows_sfb = rows_sfb + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('yes')+'</td></tr>';
+
+                    // Format yes/no rows_teams
+                    } else if((prop == "teams_mas") && d[prop] == 0){
+                        rows_teams = rows_teams + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('no')+'</td></tr>';
+                    } else if((prop == "teams_mas") && d[prop] == 1){
+                        rows_teams = rows_teams + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('yes')+'</td></tr>';
                         
                         
                     // Else if, AutoUpdate
@@ -114,6 +121,7 @@ $(document).on('appReady', function(){
                         } else {
                             rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
                         }
+                        
                     // Else if, Excel
                     } else if(prop.indexOf('excel_') > -1){
                         rows_excel = rows_excel + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
@@ -135,6 +143,9 @@ $(document).on('appReady', function(){
                     // Else if, Skype for Business
                     } else if(prop.indexOf('skype_for_business_') > -1){
                         rows_sfb = rows_sfb + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                    // Else if, Teams
+                    } else if(prop.indexOf('teams_') > -1){
+                        rows_teams= rows_teams + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
                     // Else if, Word
                     } else if(prop.indexOf('word_') > -1){
                         rows_word = rows_word + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
@@ -320,6 +331,20 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody>')
                                 .append(rows_sfb))))
+            }
+            
+            // Teams block
+            if (rows_teams !== ''){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-users'))
+                        .append(' Teams'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_teams))))
             }
 		})
 	});
