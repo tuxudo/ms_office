@@ -5,12 +5,15 @@ Gets data about MS Office applications, licensing, and updates on the clients.
 
 ## Notes
 
-On 10.14 and higher, the end users will get a prompt about allowing "supervisor" to have access to control "Microsoft AutoUpdate". The end users will either have to click "OK" to allow it or you will have to allow it with a TCC profile. Alternatively, you can disable the sections of the script that use the "Microsoft AutoUpdate" binary that triggers the prompt. To disable the msupdate binary parts, run the following on the client:
+The module can trigger a check for updates on clients using msupdate inside of Microsoft AutoUpdate. It is disabled by default. Remarks about enabling it:
 
-```
-sudo defaults write org.munkireport.ms_office msupdate_check_disabled -bool true
-sudo defaults write org.munkireport.ms_office msupdate_config_disabled -bool true
-```
+* Focus is stolen from the currently logged on user. This is how msupdate works and is expected behavior. 
+* An iconless app appears to launch in the Dock quickly, then quit again. This is normal and how msupdate works.
+* On 10.14 and higher, the end users will get a prompt about allowing "supervisor" to have access to control "Microsoft AutoUpdate". The end users will either have to click "OK" to allow it or you will have to allow it with a TCC profile.
+
+
+If you want to enable the module to trigger an update check every time the script is run (roughly once an hour), run the following command on the clients
+`sudo defaults write org.munkireport.ms_office msupdate_check_enabled -bool true`
 
 Table Schema
 ------
