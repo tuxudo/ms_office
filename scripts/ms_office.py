@@ -51,20 +51,13 @@ class utmpx(Structure):
                 ("ut_host", c_char*256),
                 ("ut_pad",  c_uint32*16),
                ]
-
-def get_msupdate_config():
+    
+def get_user_config():
 # Get the MAU's config as seen from the current or last person logged in
 # Because some settings are user specific
 
     try:
-        cmd = ['/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate', '-c', '-f','plist']
-        proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
-                                preexec_fn=demote(),
-                                stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        (output, unused_error) = proc.communicate()
-
-        mau_config = plistlib.readPlistFromString(output.split("\n",2)[2])
+        mau_config = FoundationPlist.readPlist(get_user_path()+"/Library/Preferences/com.microsoft.autoupdate2.plist")
         mau_config_items = {}
 
         for item in mau_config:
@@ -78,40 +71,42 @@ def get_msupdate_config():
                 mau_config_items['channelname'] = mau_config[item]
             elif item == 'HowToCheck':
                 mau_config_items['howtocheck'] = mau_config[item]
-            elif item == 'LastCheckForUpdates':
+            elif item == 'LastCheckForUpdates' or item == 'LastUpdate':
                 if mau_config[item] != "Dec 29, 1 at 7:03:58 PM":
-                    pattern = '%b %d, %Y, %I:%M:%S %p'
-                    mau_config_items['lastcheckforupdates'] = int(time.mktime(time.strptime(mau_config[item].replace(" at ", ", "), pattern)))
+                    pattern = '%Y-%m-%d %H:%M:%S +0000'
+                    mau_config_items['lastcheckforupdates'] = int(time.mktime(time.strptime(str(mau_config[item]).replace(" at ", ", "), pattern)))
             elif item == 'StartDaemonOnAppLaunch':
                 mau_config_items['startdaemononapplaunch'] = to_bool(mau_config[item])
 
-            elif item == 'RegisteredApplications':
+            elif item == 'Applications':
                 mau_config_items['registeredapplications'] = process_registered_apps(mau_config)        
             
         # Add in update information if enabled
-        msupdate_check_disabled = to_bool(CFPreferencesCopyAppValue('msupdate_check_disabled', 'org.munkireport.ms_office'))
-        if msupdate_check_disabled != 1:
+        msupdate_check_enabled = to_bool(CFPreferencesCopyAppValue('msupdate_check_enabled', 'org.munkireport.ms_office'))
+        if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_check_enabled == 1:
             mau_config_items = get_msupdate_update_check(mau_config_items)
-        
+                
         return (mau_config_items)
 
     except Exception:
         return {}
     
 def process_registered_apps(mau_config):
-    apps = mau_config['RegisteredApplications']
+    apps = mau_config['Applications']
     registered_apps = {}
         
     for app in apps:
-        app_name = app['ApplicationPath'].split("/")[-1].split(".")[0]
+        app_name = app.split("/")[-1].split(".")[0]
         registered_apps[app_name] = {}
-        for item in app: 
+        for item in apps[app]:
             if item == 'Application ID':
-                registered_apps[app_name]['application_id'] = app[item]
-            elif item == 'ApplicationPath':
-                registered_apps[app_name]['applicationpath'] = app[item]
-            elif item == 'VersionOnDisk':
-                registered_apps[app_name]['versionondisk'] = app[item]
+                registered_apps[app_name]['application_id'] = apps[app][item]
+                registered_apps[app_name]['applicationpath'] = app
+                try:
+                    info_plist = FoundationPlist.readPlist(app+"/Contents/Info.plist")
+                    registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
+                except Exception:
+                    pass
     return registered_apps
 
 def get_msupdate_update_check(mau_update_items):
@@ -235,6 +230,9 @@ def get_mau_prefs():
             mau_prefs['mau_privilegedhelpertool'] = 1 
         else:
             mau_prefs['mau_privilegedhelpertool'] = 0
+            
+        if 'Applications' in mau_plist:
+            mau_prefs['registeredapplications'] = process_registered_apps(mau_config)  
 
         return mau_prefs
     except Exception:
@@ -395,7 +393,7 @@ def demote():
         os.setgid(get_gid(username))
         os.setuid(get_uid(username))
     return result
-    
+
 def get_last_user():
 
     # local constants
@@ -414,7 +412,41 @@ def get_last_user():
         if (e.ut_type == 7 and e.ut_line == "console" and e.ut_user != "root" and e.ut_user != ""):
             endutxent_wtmp()
             return e.ut_user
-
+    
+def get_user_path():
+    
+    # Attempt to get currently logged in person
+    username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]
+    username = [username,""][username in [u"loginwindow", None, u""]]
+    # If we can't get the current user, get last console login
+    if username == "":
+    
+        # local constants
+        setutxent_wtmp = c.setutxent_wtmp
+        setutxent_wtmp.restype = None
+        getutxent_wtmp = c.getutxent_wtmp
+        getutxent_wtmp.restype = POINTER(utmpx)
+        endutxent_wtmp = c.setutxent_wtmp
+        endutxent_wtmp.restype = None
+        # initialize
+        setutxent_wtmp(0)
+        entry = getutxent_wtmp()
+        while entry:
+            e = entry.contents
+            entry = getutxent_wtmp()
+            if (e.ut_type == 7 and e.ut_line == "console" and e.ut_user != "root" and e.ut_user != ""):
+                endutxent_wtmp()
+                username = e.ut_user
+                    
+    # Get the user's home folder
+    cmd = ['dscl', '.', '-read', '/Users/'+username, 'NFSHomeDirectory']
+    proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (output, unused_error) = proc.communicate()                
+                    
+    return output.split(" ")[1].strip()
+        
 def main():
     """Main"""
     # Create cache dir if it does not exist
@@ -431,14 +463,7 @@ def main():
     # Get results
     result = dict()
 
-    # Check if we should run the msupdate parts, some people may want them disabled 
-    msupdate_config_disabled = to_bool(CFPreferencesCopyAppValue('msupdate_config_disabled', 'org.munkireport.ms_office'))
-    if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_config_disabled != 1:
-        msupdate_config = get_msupdate_config()
-    else:
-        msupdate_config = {}
-
-    result = merge_two_dicts(msupdate_config, get_mau_prefs())
+    result = merge_two_dicts(get_user_config(), get_mau_prefs())
     result = merge_two_dicts(result, vl_license_detect())
     result = merge_two_dicts(result, o365_license_detect())
     result = merge_two_dicts(result, shared_o365_license_detect())
