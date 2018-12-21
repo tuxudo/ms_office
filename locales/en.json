@@ -76,6 +76,7 @@
     "no_registeredapplications": "No Registered Applications",
     "not_installed": "Not Installed",
     "installed": "Installed",
+    "license_mismatch": "Volume License Version Mismatch",
     "mau_channel_widget": {
         "title": "Microsoft Update Channel",
         "insider_fast": "Insider Fast",

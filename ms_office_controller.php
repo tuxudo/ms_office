@@ -104,6 +104,31 @@ class Ms_office_controller extends Module_controller
     }
 
     /**
+    * Volume license version/Word app version mismatches
+    *
+    * @return void
+    * @author tuxuso
+    **/
+    public function get_license_mismatch()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+  
+        $queryobj = new Ms_office_model();
+        $sql = "SELECT COUNT(CASE WHEN `vl_license_type` like '%2011%' AND `word_office_generation` != '2011' THEN 1 END) AS 'v2011',
+                        COUNT(CASE WHEN `vl_license_type` like '%2016%' AND `word_office_generation` != '2016' THEN 1 END) AS 'v2016',
+                        COUNT(CASE WHEN `vl_license_type` like '%2019%' AND `word_office_generation` != '2019' THEN 1 END) AS 'v2019'
+                        FROM ms_office
+                        LEFT JOIN reportdata USING (serial_number)
+                        WHERE
+                            ".get_machine_group_filter('');        
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+    }
+
+    /**
     * Retrieve data in json format
     *
     * @return void

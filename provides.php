@@ -24,6 +24,7 @@ return array(
         'ms_word_mas' => array('view' => 'ms_word_mas_widget', 'i18n' => 'ms_office.word_mas'),
         'ms_powerpoint_mas' => array('view' => 'ms_powerpoint_mas_widget', 'i18n' => 'ms_office.powerpoint_mas'),
         'ms_remote_desktop_mas' => array('view' => 'ms_remote_desktop_mas_widget', 'i18n' => 'ms_office.remote_desktop_mas'),
+        'ms_license_mismatch' => array('view' => 'ms_license_mismatch_widget', 'i18n' => 'ms_office.license_mismatch'),
     ),
     'reports' => array(
         'ms_office_report' => array('view' => 'ms_office_report', 'i18n' => 'ms_office.report'),

@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # Some of the user elements are from the user_sessions.py script
 # made by Clayton Burlison and Michael Lynn
-# Other parts of the script from Pbowden's scripts found in his Github
+# Other parts of the script from Paul Bowden's scripts found on his Github
 #
-# To disable the msupdate parts:
-#   sudo defautls write org.munkireport.ms_office msupdate_check_disabled -bool true
-#   sudo defautls write org.munkireport.ms_office msupdate_config_disabled -bool true
+# To enable the msupdate parts:
+#   sudo defaults write org.munkireport.ms_office msupdate_check_enabled -bool true
 
 import subprocess
 import os
@@ -298,7 +297,6 @@ def o365_license_detect():
                 o365_detect = 1
 
     return {"o365_license_count":o365_count,"o365_detected":o365_detect}
-    
      
 def shared_o365_license_detect():
 # Check if there is a shared Office 365 license in use
@@ -418,25 +416,10 @@ def get_user_path():
     # Attempt to get currently logged in person
     username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]
     username = [username,""][username in [u"loginwindow", None, u""]]
+    
     # If we can't get the current user, get last console login
     if username == "":
-    
-        # local constants
-        setutxent_wtmp = c.setutxent_wtmp
-        setutxent_wtmp.restype = None
-        getutxent_wtmp = c.getutxent_wtmp
-        getutxent_wtmp.restype = POINTER(utmpx)
-        endutxent_wtmp = c.setutxent_wtmp
-        endutxent_wtmp.restype = None
-        # initialize
-        setutxent_wtmp(0)
-        entry = getutxent_wtmp()
-        while entry:
-            e = entry.contents
-            entry = getutxent_wtmp()
-            if (e.ut_type == 7 and e.ut_line == "console" and e.ut_user != "root" and e.ut_user != ""):
-                endutxent_wtmp()
-                username = e.ut_user
+        username = get_last_user()
                     
     # Get the user's home folder
     cmd = ['dscl', '.', '-read', '/Users/'+username, 'NFSHomeDirectory']
@@ -478,7 +461,7 @@ def main():
     result = merge_two_dicts(result, get_app_data("/Applications/Skype for Business.app"))
     result = merge_two_dicts(result, get_app_data("/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app"))
 
-    # Write memory results to cache
+    # Write office results to cache
     output_plist = os.path.join(cachedir, 'ms_office.plist')
     FoundationPlist.writePlist(result, output_plist)
 #    print FoundationPlist.writePlistToString(result)
