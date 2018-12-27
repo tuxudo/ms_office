@@ -102,6 +102,32 @@ class Ms_office_controller extends Module_controller
                             ".get_machine_group_filter('');
         $obj->view('json', array('msg' => current($queryobj->query($sql))));
     }
+    
+    /**
+    * Retrieve msupdate_check_enabled data in json format
+    *
+    * @return void
+    * @author tuxudo
+    **/
+    public function get_msupdate_check_enabled()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+  
+        $queryobj = new Ms_office_model();
+        $sql = "SELECT COUNT(CASE WHEN `msupdate_check_enabled` = '1' THEN 1 END) AS 'enabled',
+                        COUNT(CASE WHEN `msupdate_check_enabled` = '0' THEN 0 END) AS 'disabled'
+                        from ms_office
+                        LEFT JOIN reportdata USING (serial_number)
+                        WHERE
+                            ".get_machine_group_filter('');
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+        
+//        print_r($sql);
+    }
 
     /**
     * Volume license version/Word app version mismatches
@@ -217,7 +243,7 @@ class Ms_office_controller extends Module_controller
             return;
         }
         
-        $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `o365_license_count`, `o365_detected`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `teams_app_version`, `teams_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `registeredapplications`
+        $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `msupdate_check_enabled`, `o365_license_count`, `o365_detected`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `teams_app_version`, `teams_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `registeredapplications`
                         FROM ms_office 
                         WHERE serial_number = '$serial_number'";
         

@@ -26,7 +26,7 @@ $(document).on('appUpdate', function(e, lang) {
         if(data.AutomaticDownload != "0"){
             panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger"><span class="bigger-150">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
         } else {
-            panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger"><span class="bigger-150 disabled">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
+            panel.append(' <a href="'+baseUrl+'AutomaticDownload" class="btn btn-danger disabled"><span class="bigger-150">'+data.AutomaticDownload+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_download')+'</a>');
         }
         if(data.AutomaticCheck != "0"){
             panel.append(' <a href="'+baseUrl+'AutomaticCheck" class="btn btn-warning"><span class="bigger-150">'+data.AutomaticCheck+'</span><br>'+i18n.t('ms_office.how_to_check_widget.automatic_check')+'</a>');

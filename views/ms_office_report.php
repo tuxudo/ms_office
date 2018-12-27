@@ -9,6 +9,7 @@
   <div class="row">
     <?php $widget->view($this, 'ms_mau_channel'); ?>
     <?php $widget->view($this, 'ms_how_to_check'); ?>
+    <?php $widget->view($this, 'ms_msupdate_check_enabled'); ?>
   </div> <!-- /row -->
     
   <div class="row">

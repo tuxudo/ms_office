@@ -52,9 +52,9 @@ $(document).on('appReady', function(){
                         rows = rows + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('yes')+'</td></tr>';
                         
                     // Format yes/no rows_mau
-                    } else if((prop == "startdaemononapplaunch" || prop == "autoupdate_mas") && d[prop] == 0){
+                    } else if((prop == "startdaemononapplaunch" || prop == "autoupdate_mas" || prop == "msupdate_check_enabled") && d[prop] == 0){
                         rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('no')+'</td></tr>';
-                    } else if((prop == "startdaemononapplaunch" || prop == "autoupdate_mas") && d[prop] == 1){
+                    } else if((prop == "startdaemononapplaunch" || prop == "autoupdate_mas" || prop == "msupdate_check_enabled") && d[prop] == 1){
                         rows_mau = rows_mau + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+i18n.t('yes')+'</td></tr>';
                         
                     // Format yes/no rows_excel

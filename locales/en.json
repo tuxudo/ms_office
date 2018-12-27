@@ -76,6 +76,8 @@
     "no_registeredapplications": "No Registered Applications",
     "not_installed": "Not Installed",
     "installed": "Installed",
+    "msupdate_check_enabled": "MS Update Check Enabled",
+    "msupdate_check_enabled_short": "MSupdate",
     "license_mismatch": "Volume License Version Mismatch",
     "mau_channel_widget": {
         "title": "Microsoft Update Channel",

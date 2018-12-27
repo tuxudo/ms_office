@@ -84,6 +84,9 @@ def get_user_config():
         msupdate_check_enabled = to_bool(CFPreferencesCopyAppValue('msupdate_check_enabled', 'org.munkireport.ms_office'))
         if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_check_enabled == 1:
             mau_config_items = get_msupdate_update_check(mau_config_items)
+            mau_config_items['msupdate_check_enabled'] = 1
+        else:
+            mau_config_items['msupdate_check_enabled'] = 0
                 
         return (mau_config_items)
 
