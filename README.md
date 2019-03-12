@@ -13,7 +13,7 @@ The module can trigger a check for updates on clients using msupdate inside of M
 
 
 If you want to enable the module to trigger an update check every time the script is run (roughly once an hour), run the following command on the clients
-`sudo defaults write org.munkireport.ms_office msupdate_check_enabled -bool true`
+`sudo defaults write org.munkireport ms_office msupdate_check_enabled -bool true`
 
 Table Schema
 ------
