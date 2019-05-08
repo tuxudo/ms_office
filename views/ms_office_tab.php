@@ -19,6 +19,8 @@ $(document).on('appReady', function(){
 			var rows_teams = ''
 			var rows_reportdestkop = ''
 			var rows_sfb = ''
+			var rows_edge = ''
+			var rows_company_portal = ''
 			var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
 			for (var prop in d){
 				// Skip skipThese
@@ -149,6 +151,12 @@ $(document).on('appReady', function(){
                     // Else if, Word
                     } else if(prop.indexOf('word_') > -1){
                         rows_word = rows_word + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                    // Else if, Company Portal
+                    } else if(prop.indexOf('company_portal_') > -1){
+                        rows_company_portal = rows_company_portal + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                    // Else if, Edge
+                    } else if(prop.indexOf('edge_') > -1){
+                        rows_edge = rows_edge + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
                     
                     // Else if build out the registered applications table
                     } else if(prop == "registeredapplications"){
@@ -333,6 +341,20 @@ $(document).on('appReady', function(){
                                 .append(rows_sfb))))
             }
             
+            // Edge block
+            if (rows_edge !== ''){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-edge'))
+                        .append(' Edge'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_edge))))
+            }
+            
             // Teams block
             if (rows_teams !== ''){
                 $('#ms_office-tab')
@@ -345,6 +367,20 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody>')
                                 .append(rows_teams))))
+            }
+            
+            // Company Portal block
+            if (rows_company_portal !== ''){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-building-o'))
+                        .append(' Company Portal'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_company_poral))))
             }
 		})
 	});

@@ -57,4 +57,6 @@ Table Schema
 * word_office_generation - INT(11) - Word generation (2016/2019)
 * teams_app_version - VARCHAR(255) - Teams version
 * teams_mas - boolean - If Teams is from MAS
+* company_portal_app_version - VARCHAR(255) - Company Portal version
+* edge_app_version - VARCHAR(255) - Edge version
 

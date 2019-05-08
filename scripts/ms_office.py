@@ -92,23 +92,25 @@ def get_user_config():
 
     except Exception:
         return {}
-    
+
 def process_registered_apps(mau_config):
     apps = mau_config['Applications']
     registered_apps = {}
-        
+
     for app in apps:
         app_name = app.split("/")[-1].split(".")[0]
-        registered_apps[app_name] = {}
-        for item in apps[app]:
-            if item == 'Application ID':
-                registered_apps[app_name]['application_id'] = apps[app][item]
-                registered_apps[app_name]['applicationpath'] = app
-                try:
-                    info_plist = FoundationPlist.readPlist(app+"/Contents/Info.plist")
-                    registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
-                except Exception:
-                    pass
+        if app_name != "":
+            registered_apps[app_name] = {}
+            for item in apps[app]:
+                if item == 'Application ID':
+                    registered_apps[app_name]['application_id'] = apps[app][item]
+                    registered_apps[app_name]['applicationpath'] = app
+                    try:
+                        info_plist = FoundationPlist.readPlist(app+"/Contents/Info.plist")
+                        registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
+                    except Exception:
+                        pass
+
     return registered_apps
 
 def get_msupdate_update_check(mau_update_items):
@@ -120,7 +122,7 @@ def get_msupdate_update_check(mau_update_items):
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (output, unused_error) = proc.communicate()
-        
+
         mau_update = plistlib.readPlistFromString(output.split("\n",2)[2])
 
         for app in mau_update:
@@ -312,7 +314,7 @@ def shared_o365_license_detect():
     return shared_o365   
     
 def get_app_data(app_path):
-    
+
     # Read in Info.plist for processing 
     try:
         if os.path.exists(app_path+"/Contents/Info.plist"):
@@ -321,17 +323,17 @@ def get_app_data(app_path):
             info_plist = FoundationPlist.readPlist(app_path.replace("Applications", "Applications/Microsoft Office 2011/")+"/Contents/Info.plist")
         else:
              return {}
-            
-        app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" ", "_").lower()
-        
+
+        app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" Beta", "").replace(" Canary", "").replace(" Dev", "").replace(" ", "_").lower()
+
         app_data = {}
-        if "remote_desktop" in app_name or "onedrive" in app_name or "teams" in app_name:
+        if "remote_desktop" in app_name or "onedrive" in app_name or "teams" in app_name or "company" in app_name:
             app_data[app_name+'_app_version'] = info_plist['CFBundleShortVersionString']
         else:
             app_data[app_name+'_app_version'] = info_plist['CFBundleVersion']
-            
+
         gencheck = '.'.join(info_plist['CFBundleShortVersionString'].split(".")[:2])
-        
+
         # Check generation of Office
         if (14.7 >= float(gencheck)) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2011
@@ -339,16 +341,16 @@ def get_app_data(app_path):
             app_data[app_name+'_office_generation'] = 2016
         elif (16.17 <= float(gencheck)) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2019
-        
+
         # Check if app is a Mac App Store app
-        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name:
+        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name and "company" not in app_name and "edge" not in app_name:
             app_data[app_name+'_mas'] = 1
-        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name:
-            # Do nothing as app is an Office 2011 app
+        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name or "company" in app_name or "edge" in app_name:
+            # Do nothing as app is an Office 2011 app or not in the app store
             pass
         else:
             app_data[app_name+'_mas'] = 0
-            
+
         return app_data
     except Exception:
         return {}
@@ -358,7 +360,7 @@ def to_bool(s):
         return 1
     else:
         return 0    
-    
+
 def merge_two_dicts(x, y):
     z = x.copy()
     z.update(y)
@@ -462,6 +464,13 @@ def main():
     result = merge_two_dicts(result, get_app_data("/Applications/OneDrive.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Teams.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Skype for Business.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Company Portal.app"))
+
+    # Edge has four different channels, get them in priority
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Edge Canary.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Edge Dev.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Edge Beta.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Edge.app"))
     result = merge_two_dicts(result, get_app_data("/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app"))
 
     # Write office results to cache
