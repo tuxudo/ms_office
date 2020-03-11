@@ -1,12 +1,5 @@
 <?php $this->view('partials/head'); ?>
 
-<?php
-//Initialize models needed for the table
-new Machine_model;
-new Reportdata_model;
-new Ms_office_model;
-?>
-
 <div class="container">
   <div class="row">
   	<div class="col-lg-12">
@@ -42,11 +35,13 @@ new Ms_office_model;
 		        <th data-i18n="ms_office.edge_app_version" data-colname='ms_office.edge_app_version'></th>
 		        <th data-i18n="ms_office.teams_app_version" data-colname='ms_office.teams_app_version'></th>
 		        <th data-i18n="ms_office.company_portal_app_version" data-colname='ms_office.company_portal_app_version'></th>
+		        <th data-i18n="ms_office.atp_defender_app_version" data-colname='ms_office.atp_defender_app_version'></th>
+		        <th data-i18n="ms_office.yammer_app_version" data-colname='ms_office.yammer_app_version'></th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<tr>
-		    	     <td data-i18n="listing.loading" colspan="28" class="dataTables_empty"></td>
+		    	     <td data-i18n="listing.loading" colspan="30" class="dataTables_empty"></td>
 		    	</tr>
 		    </tbody>
 		  </table>

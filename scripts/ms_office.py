@@ -15,6 +15,7 @@ import platform
 import string
 
 sys.path.insert(0, '/usr/local/munki')
+sys.path.insert(0, '/usr/local/munkireport')
 
 from munkilib import FoundationPlist
 from CoreFoundation import CFPreferencesCopyAppValue
@@ -107,7 +108,14 @@ def process_registered_apps(mau_config):
                     registered_apps[app_name]['applicationpath'] = app
                     try:
                         info_plist = FoundationPlist.readPlist(app+"/Contents/Info.plist")
-                        registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
+                        
+                        app_name_lower = app_name.lower()
+                        if "remote_desktop" in app_name_lower or "onedrive" in app_name_lower or "teams" in app_name_lower or "company" in app_name_lower or "edge" in app_name_lower:
+                            registered_apps[app_name]['versionondisk'] = info_plist['CFBundleShortVersionString']
+                        else:
+                            registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
+                        
+#                        registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
                     except Exception:
                         pass
 
@@ -327,7 +335,7 @@ def get_app_data(app_path):
         app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" Beta", "").replace(" Canary", "").replace(" Dev", "").replace(" ", "_").lower()
 
         app_data = {}
-        if "remote_desktop" in app_name or "onedrive" in app_name or "teams" in app_name or "company" in app_name:
+        if "remote_desktop" in app_name or "onedrive" in app_name or "teams" in app_name or "company" in app_name or "edge" in app_name:
             app_data[app_name+'_app_version'] = info_plist['CFBundleShortVersionString']
         else:
             app_data[app_name+'_app_version'] = info_plist['CFBundleVersion']
@@ -343,9 +351,9 @@ def get_app_data(app_path):
             app_data[app_name+'_office_generation'] = 2019
 
         # Check if app is a Mac App Store app
-        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name and "company" not in app_name and "edge" not in app_name:
+        if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name and "company" not in app_name and "edge" not in app_name and "defender" not in app_name and "yammer" not in app_name:
             app_data[app_name+'_mas'] = 1
-        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name or "company" in app_name or "edge" in app_name:
+        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name or "company" in app_name or "edge" in app_name and "defender" in app_name and "yammer" in app_name:
             # Do nothing as app is an Office 2011 app or not in the app store
             pass
         else:
@@ -465,6 +473,8 @@ def main():
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Teams.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Skype for Business.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Company Portal.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Defender ATP.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Yammer.app"))
 
     # Edge has four different channels, get them in priority
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Edge Canary.app"))

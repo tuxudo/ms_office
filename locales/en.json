@@ -53,6 +53,8 @@
     "remote_desktop_mas": "Remote Desktop from App Store",
     "remote_desktop_mas_short": "Remote Desktop from MAS",
     "edge_app_version": "Edge Version",
+    "atp_defender_app_version": "Defender ATP Version",
+    "yammer_app_version": "Yammer Version",
     "company_portal_app_version": "Company Portal Version",
     "skype_for_business_app_version": "Skype for Business Version",
     "skype_for_business_mas": "Skype for Business from App Store",

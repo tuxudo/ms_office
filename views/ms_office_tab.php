@@ -21,6 +21,8 @@ $(document).on('appReady', function(){
 			var rows_sfb = ''
 			var rows_edge = ''
 			var rows_company_portal = ''
+			var rows_defender = ''
+			var rows_yammer = ''
 			var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
 			for (var prop in d){
 				// Skip skipThese
@@ -157,6 +159,12 @@ $(document).on('appReady', function(){
                     // Else if, Edge
                     } else if(prop.indexOf('edge_') > -1){
                         rows_edge = rows_edge + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                    // Else if, Dedender
+                    } else if(prop.indexOf('atp_defender_') > -1){
+                        rows_defender = rows_defender + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                    // Else if, Yammer
+                    } else if(prop.indexOf('yammer_app_') > -1){
+                        rows_yammer = rows_yammer + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
                     
                     // Else if build out the registered applications table
                     } else if(prop == "registeredapplications"){
@@ -381,6 +389,34 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody>')
                                 .append(rows_company_poral))))
+            }
+            
+            // ATP Defender block
+            if (rows_defender !== ''){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-shield'))
+                        .append(' ATP Defender'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_defender))))
+            }
+
+            // Yammer block
+            if (rows_yammer !== ''){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-yoast'))
+                        .append(' Yammer'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_yammer))))
             }
 		})
 	});

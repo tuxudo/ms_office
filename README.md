@@ -59,4 +59,6 @@ Table Schema
 * teams_mas - boolean - If Teams is from MAS
 * company_portal_app_version - VARCHAR(255) - Company Portal version
 * edge_app_version - VARCHAR(255) - Edge version
+* atp_defender_app_version - VARCHAR(255) - Defender ATP version
+* yammer_app_version - VARCHAR(255) - Yammer version
 
