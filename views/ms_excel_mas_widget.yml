@@ -1,0 +1,13 @@
+type: button
+widget_id: ms_excel_mas-widget
+api_url: /module/ms_office/get_mas/excel
+i18n_title: ms_office.excel_mas
+icon: fa-file-excel-o
+listing_link: /show/listing/ms_office/ms_office
+buttons:
+  - label: yes
+    i18n_label: yes
+    class: btn-warning 
+  - label: no
+    i18n_label: no
+    class: btn-success

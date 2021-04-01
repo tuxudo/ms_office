@@ -16,7 +16,7 @@ if [ $? = 0 ]; then
 
 else
 	echo "Failed to download all required components!"
-	rm -f "${MUNKIPATH}preflight.d/ms_office"
+	rm -f "${MUNKIPATH}preflight.d/ms_office.py"
 
 	# Signal that we had an error
 	ERR=1

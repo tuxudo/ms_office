@@ -1,0 +1,16 @@
+type: button
+widget_id: ms_mau_channel-widget
+api_url: /module/ms_office/get_channel
+i18n_title: ms_office.mau_channel_widget.title
+icon: fa-book
+listing_link: /show/listing/ms_office/ms_mau
+buttons:
+  - label: InsiderFast
+    i18n_label: ms_office.mau_channel_widget.insider_fast
+    class: btn-danger 
+  - label: InsiderSlow
+    i18n_label: ms_office.mau_channel_widget.insider_slow
+    class: btn-warning
+  - label: Production
+    i18n_label: ms_office.mau_channel_widget.production
+    class: btn-success

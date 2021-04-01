@@ -1,0 +1,23 @@
+row1:
+  ms_mau_channel:
+  ms_how_to_check:
+  ms_msupdate_check_enabled:
+row2:
+  ms_license_type:
+  ms_license_mismatch:
+row3:
+  ms_word_generation:
+  ms_powerpoint_generation:
+  ms_excel_generation:
+row4:
+  ms_outlook_generation:
+  ms_onenote_generation:
+  ms_remote_desktop_mas:
+row5:
+  ms_word_mas:
+  ms_powerpoint_mas:
+  ms_excel_mas:
+row6:
+  ms_outlook_mas:
+  ms_onenote_mas:
+  ms_onedrive_mas:

@@ -1,0 +1,13 @@
+type: button
+widget_id: ms_remote_desktop_mas-widget
+api_url: /module/ms_office/get_mas/remote_desktop
+i18n_title: ms_office.remote_desktop_mas
+icon: fa-desktop
+listing_link: /show/listing/ms_office/ms_office
+buttons:
+  - label: yes
+    i18n_label: yes
+    class: btn-warning 
+  - label: no
+    i18n_label: no
+    class: btn-success

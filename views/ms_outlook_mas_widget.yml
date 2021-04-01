@@ -1,0 +1,13 @@
+type: button
+widget_id: ms_outlook_mas-widget
+api_url: /module/ms_office/get_mas/outlook
+i18n_title: ms_office.outlook_mas
+icon: fa-envelope
+listing_link: /show/listing/ms_office/ms_office
+buttons:
+  - label: yes
+    i18n_label: yes
+    class: btn-warning 
+  - label: no
+    i18n_label: no
+    class: btn-success
