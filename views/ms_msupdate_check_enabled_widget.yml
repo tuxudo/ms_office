@@ -1,0 +1,13 @@
+type: button
+widget_id: msupdate_check_enabled-widget
+api_url: /module/ms_office/get_msupdate_check_enabled
+i18n_title: ms_office.license_mismatch
+icon: fa-bullseye
+listing_link: /show/listing/ms_office/ms_office
+buttons:
+  - label: enabled
+    i18n_label: enabled
+    class: btn-danger 
+  - label: disabled
+    i18n_label: disabled
+    class: btn-success

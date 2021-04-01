@@ -1,0 +1,16 @@
+type: button
+widget_id: ms_how_to_check-widget
+api_url: /module/ms_office/get_license_type
+i18n_title: ms_office.license_type_widget.title
+icon: fa-id-card
+listing_link: /show/listing/ms_office/ms_office
+buttons:
+  - label: o365
+    i18n_label: ms_office.license_type_widget.o365
+    class: btn-info 
+  - label: vl
+    i18n_label: ms_office.license_type_widget.vl
+    class: btn-info
+  - label: retail
+    i18n_label: ms_office.license_type_widget.retail
+    class: btn-info

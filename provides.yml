@@ -1,0 +1,50 @@
+client_tabs:
+    ms_office:
+        view: ms_office_tab
+        i18n: ms_office.ms_office
+listings:
+    ms_office:
+        view: ms_office_listing
+        i18n: ms_office.ms_office
+    ms_mau:
+        view: ms_mau_listing
+        i18n: ms_office.ms_mau
+widgets:
+    ms_word_generation:
+        view: ms_word_generation_widget
+    ms_excel_generation:
+        view: ms_excel_generation_widget
+    ms_powerpoint_generation:
+        view: ms_powerpoint_generation_widget
+    ms_outlook_generation:
+        view: ms_outlook_generation_widget
+    ms_onenote_generation:
+        view: ms_onenote_generation_widget
+    ms_mau_channel:
+        view: ms_mau_channel_widget
+    ms_license_type:
+        view: ms_license_type_widget
+    ms_how_to_check:
+        view: ms_how_to_check_widget
+    ms_onenote_mas:
+        view: ms_onenote_mas_widget
+    ms_outlook_mas:
+        view: ms_outlook_mas_widget
+    ms_onedrive_mas:
+        view: ms_onedrive_mas_widget
+    ms_excel_mas:
+        view: ms_excel_mas_widget
+    ms_word_mas:
+        view: ms_word_mas_widget
+    ms_powerpoint_mas:
+        view: ms_powerpoint_mas_widget
+    ms_remote_desktop_mas:
+        view: ms_remote_desktop_mas_widget
+    ms_license_mismatch:
+        view: ms_license_mismatch_widget
+    ms_msupdate_check_enabled:
+        view: ms_msupdate_check_enabled_widget
+reports:
+    ms_office_report:
+        view: ms_office_report
+        i18n: ms_office.report

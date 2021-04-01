@@ -54,7 +54,7 @@ class Ms_office_model extends \Model
         $this->rs['edge_app_version'] = '';
         $this->rs['atp_defender_app_version'] = '';
         $this->rs['yammer_app_version'] = '';
-        
+
         if ($serial) {
             $this->retrieve_record($serial);
         }
