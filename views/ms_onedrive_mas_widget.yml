@@ -4,6 +4,7 @@ api_url: /module/ms_office/get_mas/onedrive
 i18n_title: ms_office.onedrive_mas
 icon: fa-cloud
 listing_link: /show/listing/ms_office/ms_office
+i18n_empty_result: ms_office.blank
 buttons:
   - label: yes
     i18n_label: yes

@@ -4,10 +4,11 @@ api_url: /module/ms_office/get_generation/onenote
 i18n_title: ms_office.onenote_office_generation
 icon: fa-sticky-note
 listing_link: /show/listing/ms_office/ms_office
+i18n_empty_result: ms_office.blank
 buttons:
   - label: v2016
-    i18n_label: 2016
+    i18n_label: ms_office.2016
     class: btn-warning
   - label: v2019
-    i18n_label: 2019
+    i18n_label: ms_office.2019
     class: btn-success

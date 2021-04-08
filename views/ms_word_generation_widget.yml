@@ -4,13 +4,14 @@ api_url: /module/ms_office/get_generation/word
 i18n_title: ms_office.word_office_generation
 icon: fa-file-word-o
 listing_link: /show/listing/ms_office/ms_office
+i18n_empty_result: ms_office.blank
 buttons:
   - label: v2011
-    i18n_label: 2011
+    i18n_label: ms_office.2011
     class: btn-danger 
   - label: v2016
-    i18n_label: 2016
+    i18n_label: ms_office.2016
     class: btn-warning
   - label: v2019
-    i18n_label: 2019
+    i18n_label: ms_office.2019
     class: btn-success

@@ -4,6 +4,7 @@ api_url: /module/ms_office/get_how_to_check
 i18n_title: ms_office.how_to_check_widget.title
 icon: fa-check-circle
 listing_link: /show/listing/ms_office/ms_mau
+i18n_empty_result: ms_office.blank
 buttons:
   - label: AutomaticDownload
     i18n_label: ms_office.how_to_check_widget.automatic_download

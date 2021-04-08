@@ -4,6 +4,7 @@ api_url: /module/ms_office/get_channel
 i18n_title: ms_office.mau_channel_widget.title
 icon: fa-book
 listing_link: /show/listing/ms_office/ms_mau
+i18n_empty_result: ms_office.blank
 buttons:
   - label: InsiderFast
     i18n_label: ms_office.mau_channel_widget.insider_fast

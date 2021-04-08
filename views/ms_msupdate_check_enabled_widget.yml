@@ -1,9 +1,10 @@
 type: button
 widget_id: msupdate_check_enabled-widget
 api_url: /module/ms_office/get_msupdate_check_enabled
-i18n_title: ms_office.license_mismatch
+i18n_title: ms_office.msupdate_check_enabled
 icon: fa-bullseye
 listing_link: /show/listing/ms_office/ms_office
+i18n_empty_result: ms_office.blank
 buttons:
   - label: enabled
     i18n_label: enabled

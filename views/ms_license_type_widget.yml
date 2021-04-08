@@ -4,6 +4,7 @@ api_url: /module/ms_office/get_license_type
 i18n_title: ms_office.license_type_widget.title
 icon: fa-id-card
 listing_link: /show/listing/ms_office/ms_office
+i18n_empty_result: ms_office.blank
 buttons:
   - label: o365
     i18n_label: ms_office.license_type_widget.o365
