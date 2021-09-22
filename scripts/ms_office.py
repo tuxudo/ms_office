@@ -256,7 +256,9 @@ def vl_license_detect():
     if os.path.exists('/Library/Preferences/com.microsoft.office.licensingV2.plist'):
         office_vl = open('/Library/Preferences/com.microsoft.office.licensingV2.plist').read()
 
-        if 'A7vRjN2l/dCJHZOm8LKan11/zCYPCRpyChB6lOrgfi' in office_vl:
+        if 'Bozo+MzVxzFzbIo+hhzTl4xkRZSjOUX8J8nIgpXuMa' in office_vl:
+            vl_license = "Office 2021 Volume License"
+        elif 'A7vRjN2l/dCJHZOm8LKan11/zCYPCRpyChB6lOrgfi' in office_vl:
             vl_license = "Office 2019 Volume License"
         elif 'Bozo+MzVxzFzbIo+hhzTl4JKv18WeUuUhLXtH0z36s' in office_vl:
             vl_license = "Office 2019 Preview Volume License"
@@ -301,10 +303,10 @@ def o365_license_detect():
     # Check in all users' home folders for Office 365 license
     for user in output.split('\n'):
         if 'NFSHomeDirectory' in user and '/var/empty' not in user:
-            userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365.plist'
-            userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
-            userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.e0E2OUQxNUY1LTAxOUQtNDQwNS04QkJELTAxQTI5M0JBOTk4O.plist'
-            userpath4 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/e0E2OUQxNUY1LTAxOUQtNDQwNS04QkJELTAxQTI5M0JBOTk4O'
+            userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
+            userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
+            userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e.plist'
+            userpath4 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e'
 
             if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
                 o365_count = o365_count + 1

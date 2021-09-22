@@ -1,32 +1,31 @@
 <div id="ms_office-tab"></div>
-<h2 data-i18n="ms_office.ms_office"></h2>
 
 <script>
 $(document).on('appReady', function(){
-	$.getJSON(appUrl + '/module/ms_office/get_tab_data/' + serialNumber, function(data){
-		var skipThese = ['id','serial_number'];
-		$.each(data, function(i,d){
+    $.getJSON(appUrl + '/module/ms_office/get_tab_data/' + serialNumber, function(data){
+        var skipThese = ['id','serial_number'];
+        $.each(data, function(i,d){
 
-			// Generate rows from data
-			var rows = ''
-			var rows_mau = ''
-			var rows_excel = ''
-			var rows_word = ''
-			var rows_ppt = ''
-			var rows_outlook = ''
-			var rows_onenote = ''
-			var rows_onedrive = ''
-			var rows_teams = ''
-			var rows_reportdestkop = ''
-			var rows_sfb = ''
-			var rows_edge = ''
-			var rows_company_portal = ''
-			var rows_defender = ''
-			var rows_yammer = ''
-			var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
-			for (var prop in d){
-				// Skip skipThese
-				if(skipThese.indexOf(prop) == -1){
+            // Generate rows from data
+            var rows = ''
+            var rows_mau = ''
+            var rows_excel = ''
+            var rows_word = ''
+            var rows_ppt = ''
+            var rows_outlook = ''
+            var rows_onenote = ''
+            var rows_onedrive = ''
+            var rows_teams = ''
+            var rows_reportdestkop = ''
+            var rows_sfb = ''
+            var rows_edge = ''
+            var rows_company_portal = ''
+            var rows_defender = ''
+            var rows_yammer = ''
+            var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
+            for (var prop in d){
+                // Skip skipThese
+                if(skipThese.indexOf(prop) == -1){
                     // Do nothing for empty values to blank them
                     if (d[prop] == '' || d[prop] == null){
                         rows = rows
@@ -185,11 +184,13 @@ $(document).on('appReady', function(){
                     // Else, build out rows
                     } else {
                         rows = rows + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
-					}
-				}
-			}
+                    }
+                }
+            }
         
             $('#ms_office-tab')
+                .append($('<h2>')
+                    .append(i18n.t('ms_office.ms_office')))
                 .append($('<h4>')
                     .append($('<i>')))
                 .append($('<div style="max-width:400px;">')
@@ -418,7 +419,7 @@ $(document).on('appReady', function(){
                             .append($('<tbody>')
                                 .append(rows_yammer))))
             }
-		})
-	});
+        })
+    });
 });
 </script>
