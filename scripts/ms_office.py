@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/munkireport/munkireport-python2
 # Some of the user elements are from the user_sessions.py script
 # made by Clayton Burlison and Michael Lynn
 # Other parts of the script from Paul Bowden's scripts found on his Github
