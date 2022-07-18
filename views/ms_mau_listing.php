@@ -85,7 +85,7 @@
 	        	var name=$('td:eq(0)', nRow).html();
 	        	if(name == ''){name = "No Name"};
 	        	var sn=$('td:eq(1)', nRow).html();
-	        	var link = mr.getClientDetailLink(name, sn, '#tab_ms_office-tab');
+	        	var link = mr.getClientDetailLink(name, sn, '#tab_ms_office');
 	        	$('td:eq(0)', nRow).html(link);
 	        	
 	        	// Format time, if timestamp
