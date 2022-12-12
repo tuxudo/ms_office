@@ -1,4 +1,4 @@
-#!/usr/local/munkireport/munkireport-python2
+#!/usr/local/munkireport/munkireport-python3
 # Some of the user elements are from the user_sessions.py script
 # made by Clayton Burlison and Michael Lynn
 # Other parts of the script from Paul Bowden's scripts found on his Github
@@ -131,7 +131,10 @@ def get_msupdate_update_check(mau_update_items):
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (output, unused_error) = proc.communicate()
 
-        mau_update = plistlib.readPlistFromString(output.split("\n",2)[2])
+        try:
+            mau_update = plistlib.readPlistFromString(output.split("\n",2)[2])
+        except AttributeError as e:
+            mau_update = plistlib.loads(output.split("\n",2)[2])
 
         for app in mau_update:
             app_name = app['ApplicationToBeUpdatedPath'].split("/")[-1].split(".")[0]
@@ -301,7 +304,7 @@ def o365_license_detect():
     (output, unused_error) = proc.communicate()
 
     # Check in all users' home folders for Office 365 license
-    for user in output.split('\n'):
+    for user in output.decode().split('\n'):
         if 'NFSHomeDirectory' in user and '/var/empty' not in user:
             userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
             userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
@@ -383,7 +386,7 @@ def get_uid(username):
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (output, unused_error) = proc.communicate()
-    output = output.strip()
+    output = output.output().strip()
     return int(output)
 
 def get_gid(username):
@@ -392,7 +395,7 @@ def get_gid(username):
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (output, unused_error) = proc.communicate()
-    output = output.strip()
+    output = output.output().strip()
     return int(output)
 
 def demote():
@@ -400,7 +403,7 @@ def demote():
     def result():
         # Attempt to get currently logged in person
         username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]
-        username = [username,""][username in [u"loginwindow", None, u""]]
+        username = [username,""][username in ["loginwindow", None, ""]]
         # If we can't get the current user, get last console login
         if username == "":
             username = get_last_user()
@@ -431,7 +434,7 @@ def get_user_path():
     
     # Attempt to get currently logged in person
     username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]
-    username = [username,""][username in [u"loginwindow", None, u""]]
+    username = [username,""][username in ["loginwindow", None, ""]]
     
     # If we can't get the current user, get last console login
     if username == "":
@@ -444,7 +447,7 @@ def get_user_path():
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (output, unused_error) = proc.communicate()                
                     
-    return output.split(" ")[1].strip()
+    return output.output().split(" ")[1].strip()
         
 def main():
  
