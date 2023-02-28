@@ -280,6 +280,12 @@ def vl_license_detect():
         return {"vl_license_type":vl_license}
     
     elif os.path.exists('/Library/Preferences/com.microsoft.office.licensing.plist'):
+
+        try:
+            office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "r").read()
+        except:
+            office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "rb").read()
+
         office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist').read()
         
         if 'A7vRjN2l/dCJHZOm8LKan1E3WP6ExkrygJtGyujbPR' in office_vl:
@@ -305,7 +311,7 @@ def o365_license_detect():
     (output, unused_error) = proc.communicate()
 
     # Check in all users' home folders for Office 365 license
-    for user in output.decode().split('\n'):
+    for user in output.decode("utf-8", errors="ignore").split('\n'):
         if 'NFSHomeDirectory' in user and '/var/empty' not in user:
             userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
             userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
