@@ -285,8 +285,6 @@ def vl_license_detect():
             office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "r").read()
         except:
             office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "rb").read()
-
-        office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist').read()
         
         if 'A7vRjN2l/dCJHZOm8LKan1E3WP6ExkrygJtGyujbPR' in office_vl:
             vl_license = "Office 2011 Volume License"
