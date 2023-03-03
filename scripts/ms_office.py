@@ -258,7 +258,10 @@ def vl_license_detect():
 # Detect if there is a volumne license installed and what kind it is
 
     if os.path.exists('/Library/Preferences/com.microsoft.office.licensingV2.plist'):
-        office_vl = open('/Library/Preferences/com.microsoft.office.licensingV2.plist').read()
+        try:
+            office_vl = open('/Library/Preferences/com.microsoft.office.licensingV2.plist', "r").read()
+        except:
+            office_vl = open('/Library/Preferences/com.microsoft.office.licensingV2.plist', "rb").read().decode("utf-8", errors="ignore")
 
         if 'Bozo+MzVxzFzbIo+hhzTl4xkRZSjOUX8J8nIgpXuMa' in office_vl:
             vl_license = "Office 2021 Volume License"
@@ -284,7 +287,7 @@ def vl_license_detect():
         try:
             office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "r").read()
         except:
-            office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "rb").read()
+            office_vl = open('/Library/Preferences/com.microsoft.office.licensing.plist', "rb").read().decode("utf-8", errors="ignore")
         
         if 'A7vRjN2l/dCJHZOm8LKan1E3WP6ExkrygJtGyujbPR' in office_vl:
             vl_license = "Office 2011 Volume License"
