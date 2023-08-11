@@ -61,4 +61,5 @@ Table Schema
 * edge_app_version - VARCHAR(255) - Edge version
 * atp_defender_app_version - VARCHAR(255) - Defender ATP version
 * yammer_app_version - VARCHAR(255) - Yammer version
+* o365_user_accounts - TEXT - A list of users and what Office 365 account they are signed into
 

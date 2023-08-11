@@ -303,6 +303,7 @@ def o365_license_detect():
 
     o365_count = 0
     o365_detect = 0
+    o365_user_accounts = ""
 
     # Get all users' home folders
     cmd = ['dscl', '.', '-readall', '/Users', 'NFSHomeDirectory']
@@ -315,14 +316,23 @@ def o365_license_detect():
     for user in output.decode("utf-8", errors="ignore").split('\n'):
         if 'NFSHomeDirectory' in user and '/var/empty' not in user:
             userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
-            userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e.plist'
-            userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e'
+            userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
+            userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e.plist'
+            userpath4 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e'
 
-            if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)):
+            if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
                 o365_count = o365_count + 1
                 o365_detect = 1
 
-    return {"o365_license_count":o365_count,"o365_detected":o365_detect}
+                out = []
+                for pref in get_user_prefs().split('\n'):
+                    pl = FoundationPlist.readPlist(pref)
+                    for item in pl:
+                        if item == 'OfficeActivationEmailAddress':
+                            out.append(pref.replace("/Library/Preferences/com.microsoft.office.plist", "").replace("/Users/", "") + " - " + (pl[item]))
+                o365_user_accounts = ", ".join(out)
+
+    return {"o365_license_count":o365_count,"o365_detected":o365_detect,"o365_user_accounts":o365_user_accounts}
 
 def shared_o365_license_detect():
 # Check if there is a shared Office 365 license in use
@@ -455,6 +465,25 @@ def get_user_path():
     (output, unused_error) = proc.communicate()                
                     
     return output.output().split(" ")[1].strip()
+
+def get_user_prefs():
+
+    user_prefs = ""
+    
+    # Get all users' home folders
+    cmd = ['dscl', '.', '-readall', '/Users', 'NFSHomeDirectory']
+    proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (output, unused_error) = proc.communicate()
+    
+    for user in output.decode().split('\n'):
+        if 'NFSHomeDirectory' in user and '/var/empty' not in user:
+            user_pref  = user.replace("NFSHomeDirectory: ", "")+'/Library/Preferences/com.microsoft.office.plist'
+            if os.path.isfile(user_pref):
+                user_prefs = user_pref + "\n" + user_prefs  
+            
+    return user_prefs[:-1]
         
 def main():
  
