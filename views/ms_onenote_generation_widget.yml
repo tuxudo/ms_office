@@ -6,9 +6,16 @@ icon: fa-sticky-note
 listing_link: /show/listing/ms_office/ms_office
 i18n_empty_result: ms_office.blank
 buttons:
+  - label: v2011
+    i18n_label: ms_office.2011
+    class: btn-danger 
+    hide_when_zero: True
   - label: v2016
     i18n_label: ms_office.2016
-    class: btn-warning
+    class: btn-danger
   - label: v2019
     i18n_label: ms_office.2019
+    class: btn-warning
+  - label: v2021
+    i18n_label: ms_office.2021
     class: btn-success
