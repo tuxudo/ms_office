@@ -6,12 +6,12 @@ icon: fa-book
 listing_link: /show/listing/ms_office/ms_mau
 i18n_empty_result: ms_office.blank
 buttons:
-  - label: InsiderFast
-    i18n_label: ms_office.mau_channel_widget.insider_fast
+  - label: Beta
+    i18n_label: ms_office.mau_channel_widget.beta
     class: btn-danger 
-  - label: InsiderSlow
-    i18n_label: ms_office.mau_channel_widget.insider_slow
+  - label: Preview
+    i18n_label: ms_office.mau_channel_widget.preview
     class: btn-warning
-  - label: Production
-    i18n_label: ms_office.mau_channel_widget.production
+  - label: Current
+    i18n_label: ms_office.mau_channel_widget.current
     class: btn-success

@@ -59,9 +59,9 @@ class Ms_office_controller extends Module_controller
     public function get_channel()
     {
         $sql = "SELECT COUNT(1) as total,
-                        COUNT(CASE WHEN `channelname` = 'InsiderFast' THEN 1 END) AS 'InsiderFast',
-                        COUNT(CASE WHEN `channelname` = 'External' THEN 1 END) AS 'InsiderSlow',
-                        COUNT(CASE WHEN `channelname` = 'Production' THEN 1 END) AS 'Production'
+                        COUNT(CASE WHEN `channelname` = 'InsiderFast' OR `channelname` = 'Beta' THEN 1 END) AS 'Beta',
+                        COUNT(CASE WHEN `channelname` = 'External' OR `channelname` = 'Preview' THEN 1 END) AS 'Preview',
+                        COUNT(CASE WHEN `channelname` = 'Production' OR `channelname` = 'Current' THEN 1 END) AS 'Current'
                         from ms_office
                         LEFT JOIN reportdata USING (serial_number)
                         WHERE ".get_machine_group_filter('');
@@ -134,7 +134,8 @@ class Ms_office_controller extends Module_controller
         $sql = "SELECT COUNT(CASE WHEN `vl_license_type` like '%2011%' AND `word_office_generation` != '2011' THEN 1 END) AS 'v2011',
                         COUNT(CASE WHEN `vl_license_type` like '%2016%' AND `word_office_generation` != '2016' THEN 1 END) AS 'v2016',
                         COUNT(CASE WHEN `vl_license_type` like '%2019%' AND `word_office_generation` != '2019' THEN 1 END) AS 'v2019',
-                        COUNT(CASE WHEN `vl_license_type` like '%2021%' AND `word_office_generation` != '2021' THEN 1 END) AS 'v2021'
+                        COUNT(CASE WHEN `vl_license_type` like '%2021%' AND `word_office_generation` != '2021' THEN 1 END) AS 'v2021',
+                        COUNT(CASE WHEN `vl_license_type` like '%2024%' AND `word_office_generation` != '2024' THEN 1 END) AS 'v2024'
                         FROM ms_office
                         LEFT JOIN reportdata USING (serial_number)
                         WHERE ".get_machine_group_filter('');
@@ -186,7 +187,8 @@ class Ms_office_controller extends Module_controller
         $sql = "SELECT COUNT(CASE WHEN `".$app."_office_generation` = '2011' THEN 1 END) AS 'v2011',
                     COUNT(CASE WHEN `".$app."_office_generation` = '2016' THEN 1 END) AS 'v2016',
                     COUNT(CASE WHEN `".$app."_office_generation` = '2019' THEN 1 END) AS 'v2019',
-                    COUNT(CASE WHEN `".$app."_office_generation` = '2021' THEN 1 END) AS 'v2021'
+                    COUNT(CASE WHEN `".$app."_office_generation` = '2021' THEN 1 END) AS 'v2021',
+                    COUNT(CASE WHEN `".$app."_office_generation` = '2024' THEN 1 END) AS 'v2024'
                     FROM ms_office
                     LEFT JOIN reportdata USING (serial_number)
                     WHERE ".get_machine_group_filter('');
@@ -212,7 +214,9 @@ class Ms_office_controller extends Module_controller
 
         $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `msupdate_check_enabled`, `o365_license_count`, `o365_detected`, `o365_user_accounts`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `company_portal_app_version`, `atp_defender_app_version`, `edge_app_version`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `teams_app_version`, `teams_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `yammer_app_version`, `registeredapplications`
                         FROM ms_office 
-                        WHERE serial_number = '$serial_number'";
+                        LEFT JOIN reportdata USING (serial_number)
+                        ".get_machine_group_filter()."
+                        AND serial_number = '$serial_number'";
 
         $queryobj = new Ms_office_model();
         jsonView($queryobj->query($sql));

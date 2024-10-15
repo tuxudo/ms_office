@@ -45,7 +45,7 @@
               </tr>
             </tbody>
           </table>
-    </div> <!-- /span 13 -->
+    </div> <!-- /span -->
   </div> <!-- /row -->
 </div>  <!-- /container -->
 

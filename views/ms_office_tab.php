@@ -23,6 +23,8 @@ $(document).on('appReady', function(){
             var rows_defender = ''
             var rows_yammer = ''
             var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
+            var rdp_win_app = "win"
+
             for (var prop in d){
                 // Skip skipThese
                 if(skipThese.indexOf(prop) == -1){
@@ -119,7 +121,7 @@ $(document).on('appReady', function(){
                         rows = rows + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop].replaceAll(', ', '<br>')+'</td></tr>';
 
                     // Else if, AutoUpdate
-                    } else if(prop.indexOf('autoupdate_') > -1 || prop == 'channelname'  || prop == 'howtocheck'  || prop == 'lastcheckforupdates'  || prop == 'manifestserver'  || prop == 'updatecache' ){
+                    } else if(prop.indexOf('autoupdate_') > -1 || prop == 'channelname' || prop == 'howtocheck' || prop == 'lastcheckforupdates' || prop == 'manifestserver' || prop == 'updatecache'){
                         // Format last check date, if timestamp
                         if (prop == 'lastcheckforupdates' && ! isNaN(d[prop]) && d[prop] !== ""){
                             var date = new Date(d[prop] * 1000);
@@ -145,6 +147,10 @@ $(document).on('appReady', function(){
                         rows_ppt = rows_ppt + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
                     // Else if, Remote Desktop
                     } else if(prop.indexOf('remote_desktop_') > -1){
+                        // Set variable for MS RDP or Win App
+                        if (prop == "remote_desktop_app_version" && d[prop] < "11"){
+                            rdp_win_app = "rdp"
+                        }
                         rows_reportdestkop = rows_reportdestkop + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
                     // Else if, Skype for Business
                     } else if(prop.indexOf('skype_for_business_') > -1){
@@ -326,12 +332,26 @@ $(document).on('appReady', function(){
             }
 
             // MS RDP block
-            if (rows_reportdestkop !== ''){
+            if (rows_reportdestkop !== '' && rdp_win_app == "rdp"){
                 $('#ms_office-tab')
                     .append($('<h4>')
                         .append($('<i>')
                             .addClass('fa fa-desktop'))
                         .append(' Remote Desktop'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_reportdestkop))))
+            }
+
+            // Windows App (eww) block
+            if (rows_reportdestkop !== '' && rdp_win_app == "win"){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-windows'))
+                        .append(' Windows App'))
                     .append($('<div style="max-width:350px;">')
                         .append($('<table>')
                             .addClass('table table-striped table-condensed')

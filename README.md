@@ -3,18 +3,6 @@ Microsoft Office Module
 
 Gets data about MS Office applications, licensing, and updates on the clients.
 
-## Notes
-
-The module can trigger a check for updates on clients using msupdate inside of Microsoft AutoUpdate. It is disabled by default. Remarks about enabling it:
-
-* Focus is stolen from the currently logged on user. This is how msupdate works and is expected behavior. 
-* An iconless app appears to launch in the Dock quickly, then quit again. This is normal and how msupdate works.
-* On 10.14 and higher, the end users will get a prompt about allowing "supervisor" to have access to control "Microsoft AutoUpdate". The end users will either have to click "OK" to allow it or you will have to allow it with a TCC profile.
-
-
-If you want to enable the module to trigger an update check every time the script is run (roughly once an hour), run the following command on the clients
-`sudo defaults write org.munkireport.ms_office msupdate_check_enabled -bool true`
-
 Table Schema
 ------
 * channelname - VARCHAR(255) - Name of the channel MAU uses to check for updates
@@ -48,8 +36,8 @@ Table Schema
 * powerpoint_app_version - VARCHAR(255) - PowerPoint version
 * powerpoint_mas - boolean - If PowerPoint is from MAS
 * powerpoint_office_generation - INT(11) - PowerPoint generation (2016/2019)
-* remote_desktop_app_version - VARCHAR(255) - Remote Desktop version
-* remote_desktop_mas - boolean - If Remote Desktop is from MAS
+* remote_desktop_app_version - VARCHAR(255) - Windows App version
+* remote_desktop_mas - boolean - If Windows App is from MAS
 * skype_for_business_app_version - VARCHAR(255) - Skype for Business version
 * skype_for_business_mas - boolean - If Skype for Business is from MAS
 * word_app_version - VARCHAR(255) - Word version

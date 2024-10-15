@@ -20,16 +20,15 @@
                 <th data-i18n="ms_office.mau_privilegedhelpertool_short" data-colname='ms_office.mau_privilegedhelpertool'></th>
                 <th data-i18n="ms_office.sendalltelemetryenabled_short" data-colname='ms_office.sendalltelemetryenabled'></th>
                 <th data-i18n="ms_office.startdaemononapplaunch_short" data-colname='ms_office.startdaemononapplaunch'></th>
-                <th data-i18n="ms_office.msupdate_check_enabled_short" data-colname='ms_office.msupdate_check_enabled'></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td data-i18n="listing.loading" colspan="14" class="dataTables_empty"></td>
+                <td data-i18n="listing.loading" colspan="13" class="dataTables_empty"></td>
               </tr>
             </tbody>
           </table>
-    </div> <!-- /span 13 -->
+    </div> <!-- /span -->
   </div> <!-- /row -->
 </div>  <!-- /container -->
 
@@ -123,12 +122,6 @@
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('enabled')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('disabled')+'</span>' : '')
                 $('td:eq(12)', nRow).html(status)
-
-                // Format msupdate_check_enabled
-                var status=$('td:eq(13)', nRow).html();
-                status = status == 1 ? '<span class="label label-danger">'+i18n.t('enabled')+'</span>' :
-                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('disabled')+'</span>' : '')
-                $('td:eq(13)', nRow).html(status)
             }
         });
 

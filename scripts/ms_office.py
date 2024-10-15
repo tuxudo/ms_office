@@ -3,9 +3,7 @@
 # Some of the user elements are from the user_sessions.py script
 # made by Clayton Burlison and Michael Lynn
 # Other parts of the script from Paul Bowden's scripts found on his Github
-#
-# To enable the msupdate parts:
-#   sudo defaults write org.munkireport.ms_office msupdate_check_enabled -bool true
+
 
 import subprocess
 import os
@@ -22,14 +20,18 @@ from CoreFoundation import CFPreferencesCopyAppValue
 
 from SystemConfiguration import SCDynamicStoreCopyConsoleUser
 
-def get_user_config():
-# Get the MAU's config as seen from the current or last person logged in
-# Because some settings are user specific
+def get_mau_prefs():
+    # Get the MAU's config as seen from the current or last person logged in
+    # because some settings are user specific, then process global and profile
+    # level settings
+
+    mau_config_items = {}
+    mau_config_items['msupdate_check_enabled'] = 0 # This is disabled because it doesn't really work
 
     try:
         mau_config = FoundationPlist.readPlist(get_user_path()+"/Library/Preferences/com.microsoft.autoupdate2.plist")
-        mau_config_items = {}
 
+        # Process user level config
         for item in mau_config:
             if item == 'UpdateCache':
                 mau_config_items['updatecache'] = mau_config[item]
@@ -39,6 +41,7 @@ def get_user_config():
                 mau_config_items['autoupdateversion'] = mau_config[item]
             elif item == 'ChannelName':
                 mau_config_items['channelname'] = mau_config[item]
+                print(mau_config[item])
             elif item == 'HowToCheck':
                 mau_config_items['howtocheck'] = mau_config[item]
             elif item == 'LastCheckForUpdates' or item == 'LastUpdate':
@@ -48,24 +51,87 @@ def get_user_config():
             elif item == 'StartDaemonOnAppLaunch':
                 mau_config_items['startdaemononapplaunch'] = to_bool(mau_config[item])
 
-            elif item == 'Applications' or item == 'ApplicationsSystem':
-                mau_config_items['registeredapplications'] = process_registered_apps(mau_config)
+            elif item == 'Applications':
+                mau_config_items['registeredapplications'] = process_registered_apps(mau_config['Applications'])
 
-        # Add in update information if enabled
-        msupdate_check_enabled = to_bool(CFPreferencesCopyAppValue('msupdate_check_enabled', 'org.munkireport.ms_office'))
-        if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_check_enabled == 1:
-            mau_config_items = get_msupdate_update_check(mau_config_items)
-            mau_config_items['msupdate_check_enabled'] = 1
+            # # Add in update information if enabled
+            # msupdate_check_enabled = to_bool(CFPreferencesCopyAppValue('msupdate_check_enabled', 'org.munkireport.ms_office'))
+            # if os.path.exists('/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate') and msupdate_check_enabled == 1:
+            #     mau_config_items = get_msupdate_update_check(mau_config_items)
+            #     mau_config_items['msupdate_check_enabled'] = 1
+            # else:
+            #     mau_config_items['msupdate_check_enabled'] = 0
+    except:
+        pass
+
+    try:
+        # After processing local user's prefs, process global to get profile managed prefs
+        UpdateCache = CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2')
+        if UpdateCache is not None:
+            mau_config_items['updatecache'] = UpdateCache
+
+        ManifestServer = CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2')
+        if ManifestServer is not None:
+            mau_config_items['manifestserver'] = ManifestServer
+
+        ChannelName = CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2')
+        if ChannelName is not None:
+            mau_config_items['channelname'] = ChannelName
         else:
-            mau_config_items['msupdate_check_enabled'] = 0
+            mau_config_items['channelname'] = "Current"
 
-        return (mau_config_items)
+        HowToCheck = CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2')
+        if HowToCheck is not None:
+            mau_config_items['howtocheck'] = HowToCheck
 
-    except Exception:
-        return {}
+        StartDaemonOnAppLaunch = CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2')
+        if StartDaemonOnAppLaunch is not None:
+            mau_config_items['startdaemononapplaunch'] = to_bool(StartDaemonOnAppLaunch)
+        else:
+            mau_config_items['startdaemononapplaunch'] = 1
 
-def process_registered_apps(mau_config):
-    apps = mau_config['Applications']
+        DisableInsiderCheckbox = CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2')
+        if DisableInsiderCheckbox is not None:
+            mau_config_items['disableinsidercheckbox'] = to_bool(DisableInsiderCheckbox)
+        else:
+            mau_config_items['disableinsidercheckbox'] = 0
+
+        SendAllTelemetryEnabled = CFPreferencesCopyAppValue('SendAllTelemetryEnabled', 'com.microsoft.autoupdate2')
+        if SendAllTelemetryEnabled is not None:
+            mau_config_items['sendalltelemetryenabled'] = to_bool(SendAllTelemetryEnabled)
+        else:
+            mau_config_items['sendalltelemetryenabled'] = 1
+
+        EnableCheckForUpdatesButton = CFPreferencesCopyAppValue('EnableCheckForUpdatesButton', 'com.microsoft.autoupdate2')
+        if EnableCheckForUpdatesButton is not None:
+            mau_config_items['enablecheckforupdatesbutton'] = to_bool(EnableCheckForUpdatesButton)
+        else:
+            mau_config_items['enablecheckforupdatesbutton'] = 1
+
+        LastUpdate = CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2')
+        if LastUpdate is not None and LastUpdate != "Dec 29, 1 at 7:03:58 PM":
+            pattern = '%b %d, %Y, %I:%M:%S %p'
+            mau_config_items['lastcheckforupdates'] = int(time.mktime(time.strptime(LastUpdate.replace(" at ", ", "), pattern)))
+
+        try:
+            Applications = CFPreferencesCopyAppValue('Applications', 'com.microsoft.autoupdate2')
+            if Applications is not None:
+                mau_config_items['registeredapplications'] = merge_two_dicts(process_registered_apps(Applications), mau_config_items['registeredapplications'])
+        except:
+            pass
+
+        # Check if the Privileged Helper Tool is installed
+        if os.path.exists('/Library/PrivilegedHelperTools/com.microsoft.autoupdate.helper'):
+            mau_config_items['mau_privilegedhelpertool'] = 1
+        else:
+            mau_config_items['mau_privilegedhelpertool'] = 0
+
+    except:
+        pass
+
+    return mau_config_items
+
+def process_registered_apps(apps):
     registered_apps = {}
 
     for app in apps:
@@ -82,12 +148,12 @@ def process_registered_apps(mau_config):
                         info_plist = FoundationPlist.readPlist(app+"/Contents/Info.plist")
 
                         app_name_lower = app_name.lower()
-                        if "remote_desktop" in app_name_lower or "onedrive" in app_name_lower or "teams" in app_name_lower or "company" in app_name_lower or "edge" in app_name_lower:
+                        if "remote_desktop" in app_name_lower or "windows_app" in app_name_lower or "onedrive" in app_name_lower or "teams" in app_name_lower or "company" in app_name_lower or "edge" in app_name_lower:
                             registered_apps[app_name]['versionondisk'] = info_plist['CFBundleShortVersionString']
                         else:
                             registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
 
-#                        registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
+                       # registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
                     except Exception:
                         pass
                 elif item == 'Last Update Seen':
@@ -98,7 +164,8 @@ def process_registered_apps(mau_config):
     return registered_apps
 
 def get_msupdate_update_check(mau_update_items):
-# Quickly check for updates as the current or last person logged in
+    # Quickly check for updates as the current or last person logged in
+    # This is disabled and unused as of 2024-10-15
     try:
         username=current_user()
 
@@ -116,8 +183,8 @@ def get_msupdate_update_check(mau_update_items):
             for item in app:
                 if item == 'Application ID':
                     mau_update_items['registeredapplications'][app_name]['application_id'] = app[item]
-#                elif item == 'ApplicationToBeUpdatedPath':
-#                    mau_update_items['registeredapplications'][app_name]['applicationpathtobeupdated'] = app[item]
+               # elif item == 'ApplicationToBeUpdatedPath':
+               #     mau_update_items['registeredapplications'][app_name]['applicationpathtobeupdated'] = app[item]
                 elif item == 'Baseline Version':
                     mau_update_items['registeredapplications'][app_name]['baseline_version'] = app[item]
                 elif item == 'Date':
@@ -141,95 +208,8 @@ def get_msupdate_update_check(mau_update_items):
     except Exception:
         return {}
 
-def get_mau_prefs():
-# Get system level preferences from /Library/ and config profiles
-
-    try:
-        if os.path.exists('/Library/Preferences/com.microsoft.autoupdate2.plist'):
-            mau_plist = FoundationPlist.readPlist("/Library/Preferences/com.microsoft.autoupdate2.plist")
-        else:
-            mau_plist = {}
-
-        mau_prefs = {}
-
-        if 'UpdateCache' in mau_plist:
-            mau_prefs['updatecache'] = mau_plist['UpdateCache']
-        elif CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2'):
-            mau_prefs['updatecache'] = CFPreferencesCopyAppValue('UpdateCache', 'com.microsoft.autoupdate2')
-
-        if 'ChannelName' in mau_plist:
-            mau_prefs['channelname'] = mau_plist['ChannelName']
-        elif CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2'):
-            mau_prefs['channelname'] = CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2')
-        else:
-            mau_prefs['channelname'] = "Production"
-
-        if 'HowToCheck' in mau_plist:
-            mau_prefs['howtocheck'] = mau_plist['HowToCheck']
-        elif CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2'):
-            mau_prefs['howtocheck'] = CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2')
-
-        if 'ManifestServer' in mau_plist:
-            mau_prefs['manifestserver'] = mau_plist['ManifestServer']
-        elif CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2'):
-            mau_prefs['manifestserver'] = CFPreferencesCopyAppValue('ManifestServer', 'com.microsoft.autoupdate2')
-
-        if 'LastUpdate' in mau_plist:
-            if mau_plist['LastUpdate'] != "Dec 29, 1 at 7:03:58 PM":
-                pattern = '%b %d, %Y, %I:%M:%S %p'
-                mau_prefs['lastcheckforupdates'] = int(time.mktime(time.strptime(mau_plist['LastUpdate'].replace(" at ", ", "), pattern)))
-        elif CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2'):
-            if CFPreferencesCopyAppValue('LastUpdate', 'com.microsoft.autoupdate2') != "Dec 29, 1 at 7:03:58 PM":
-                pattern = '%b %d, %Y, %I:%M:%S %p'
-                mau_prefs['lastcheckforupdates'] = int(time.mktime(time.strptime(mau_plist['LastUpdate'].replace(" at ", ", "), pattern)))
-
-        if 'LastService' in mau_plist:
-            mau_prefs['lastservice'] = mau_plist['LastService']
-        elif CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2'):
-            mau_prefs['lastservice'] = CFPreferencesCopyAppValue('LastService', 'com.microsoft.autoupdate2')
-
-        if 'EnableCheckForUpdatesButton' in mau_plist:
-            mau_prefs['enablecheckforupdatesbutton'] = to_bool(mau_plist['EnableCheckForUpdatesButton'])
-        elif CFPreferencesCopyAppValue('EnableCheckForUpdatesButton', 'com.microsoft.autoupdate2'):
-            mau_prefs['enablecheckforupdatesbutton'] = to_bool(CFPreferencesCopyAppValue('EnableCheckForUpdatesButton', 'com.microsoft.autoupdate2'))
-        else:
-            mau_prefs['enablecheckforupdatesbutton'] = 1
-
-        if 'SendAllTelemetryEnabled' in mau_plist:
-            mau_prefs['sendalltelemetryenabled'] = to_bool(mau_plist['SendAllTelemetryEnabled'])
-        elif CFPreferencesCopyAppValue('SendAllTelemetryEnabled', 'com.microsoft.autoupdate2'):
-            mau_prefs['sendalltelemetryenabled'] = to_bool(CFPreferencesCopyAppValue('SendAllTelemetryEnabled', 'com.microsoft.autoupdate2'))
-        else:
-            mau_prefs['sendalltelemetryenabled'] = 1
-
-        if 'DisableInsiderCheckbox' in mau_plist:
-            mau_prefs['disableinsidercheckbox'] = to_bool(mau_plist['DisableInsiderCheckbox'])
-        elif CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2'):
-            mau_prefs['disableinsidercheckbox'] = to_bool(CFPreferencesCopyAppValue('DisableInsiderCheckbox', 'com.microsoft.autoupdate2'))
-        else:
-            mau_prefs['disableinsidercheckbox'] = 0
-
-        if 'StartDaemonOnAppLaunch' in mau_plist:
-            mau_prefs['startdaemononapplaunch'] = to_bool(mau_plist['StartDaemonOnAppLaunch'])
-        elif CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2'):
-            mau_prefs['startdaemononapplaunch'] = to_bool(CFPreferencesCopyAppValue('StartDaemonOnAppLaunch', 'com.microsoft.autoupdate2'))
-        else:
-            mau_prefs['startdaemononapplaunch'] = 1
-
-        if os.path.exists('/Library/PrivilegedHelperTools/com.microsoft.autoupdate.helper'):
-            mau_prefs['mau_privilegedhelpertool'] = 1 
-        else:
-            mau_prefs['mau_privilegedhelpertool'] = 0
-
-        if 'Applications' in mau_plist:
-            mau_prefs['registeredapplications'] = process_registered_apps(mau_config)  
-
-        return mau_prefs
-    except Exception:
-        return {}
-
 def vl_license_detect():
-# Detect if there is a volumne license installed and what kind it is
+    # Detect if there is a volumne license installed and what kind it is
 
     if os.path.exists('/Library/Preferences/com.microsoft.office.licensingV2.plist'):
         try:
@@ -237,8 +217,14 @@ def vl_license_detect():
         except:
             office_vl = open('/Library/Preferences/com.microsoft.office.licensingV2.plist', "rb").read().decode("utf-8", errors="ignore")
 
-        if 'Bozo+MzVxzFzbIo+hhzTl4xkRZSjOUX8J8nIgpXuMa' in office_vl:
+        if 'Bozo+MzVxzFzbIo+hhzTl41DwAFJEitHSg5IiCEeuI' in office_vl:
+            vl_license = "Office 2024 Volume License"
+        elif 'Bozo+MzVxzFzbIo+hhzTl4hlrSMvpMqJ/gUHjvPE8/' in office_vl:
+            vl_license = "Office 2024 Preview Volume License"
+        elif 'Bozo+MzVxzFzbIo+hhzTl4xkRZSjOUX8J8nIgpXuMa' in office_vl:
             vl_license = "Office 2021 Volume License"
+        elif 'Bozo+MzVxzFzbIo+hhzTl43O7w5oMsJ7M3Q4vhvz/j' in office_vl:
+            vl_license = "Office 2021 Preview Volume License"
         elif 'A7vRjN2l/dCJHZOm8LKan11/zCYPCRpyChB6lOrgfi' in office_vl:
             vl_license = "Office 2019 Volume License"
         elif 'Bozo+MzVxzFzbIo+hhzTl4JKv18WeUuUhLXtH0z36s' in office_vl:
@@ -273,7 +259,7 @@ def vl_license_detect():
         return {}
 
 def o365_license_detect():
-# Check all users' home folders for Office 365 license
+    # Check all users' home folders for Office 365 license
 
     o365_count = 0
     o365_detect = 0
@@ -290,11 +276,12 @@ def o365_license_detect():
     for user in output.decode("utf-8", errors="ignore").split('\n'):
         if 'NFSHomeDirectory' in user and '/var/empty' not in user:
             userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
-            userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
+            # userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
             userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e.plist'
             userpath4 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e'
 
-            if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
+            if (os.path.exists(userpath1)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
+            # if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
                 o365_count = o365_count + 1
                 o365_detect = 1
 
@@ -309,7 +296,7 @@ def o365_license_detect():
     return {"o365_license_count":o365_count,"o365_detected":o365_detect,"o365_user_accounts":o365_user_accounts}
 
 def shared_o365_license_detect():
-# Check if there is a shared Office 365 license in use
+    # Check if there is a shared Office 365 license in use
 
     if (os.path.exists("/Library/Application Support/Microsoft/Office365/com.microsoft.Office365.plist")):
         shared_o365 = {"shared_o365_license":1}
@@ -319,20 +306,24 @@ def shared_o365_license_detect():
     return shared_o365   
 
 def get_app_data(app_path):
-
     # Read in Info.plist for processing 
+
     try:
         if os.path.exists(app_path+"/Contents/Info.plist"):
             info_plist = FoundationPlist.readPlist(app_path+"/Contents/Info.plist")
         elif ( "Excel" in app_path or "Outlook" in app_path or "PowerPoint" in app_path or "Word" in app_path ) and os.path.exists(app_path.replace("Applications", "Applications/Microsoft Office 2011/")+"/Contents/Info.plist"):
+            # Check for Office 2011 apps
             info_plist = FoundationPlist.readPlist(app_path.replace("Applications", "Applications/Microsoft Office 2011/")+"/Contents/Info.plist")
+        elif ( "Microsoft Remote Desktop" in app_path) and os.path.exists(app_path.replace("Microsoft Remote Desktop", "Windows App")+"/Contents/Info.plist"):
+            # Check for Windows App (ex-Microsoft Remote Desktop) what a silly name change
+            info_plist = FoundationPlist.readPlist(app_path.replace("Microsoft Remote Desktop", "Windows App")+"/Contents/Info.plist")
         else:
              return {}
 
         app_name = app_path.split("/")[-1].split(".")[0].replace("Microsoft ", "").replace(" Beta", "").replace(" Canary", "").replace(" Dev", "").replace(" ", "_").lower()
 
         app_data = {}
-        if "remote_desktop" in app_name or "onedrive" in app_name or "teams" in app_name or "company" in app_name or "edge" in app_name:
+        if "remote_desktop" in app_name or "windows_app" in app_name or "onedrive" in app_name or "teams" in app_name or "company" in app_name or "edge" in app_name:
             app_data[app_name+'_app_version'] = info_plist['CFBundleShortVersionString']
         else:
             app_data[app_name+'_app_version'] = info_plist['CFBundleVersion']
@@ -346,8 +337,10 @@ def get_app_data(app_path):
             app_data[app_name+'_office_generation'] = 2016
         elif (16.17 <= float(gencheck) <= 16.78) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2019
-        elif (16.79 <= float(gencheck)) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+        elif (16.79 <= float(gencheck) <= 16.89) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2021
+        elif (16.90 <= float(gencheck)) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+            app_data[app_name+'_office_generation'] = 2024
 
         # Check if app is a Mac App Store app
         if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name and "company" not in app_name and "edge" not in app_name and "defender" not in app_name and "yammer" not in app_name:
@@ -450,8 +443,7 @@ def main():
     # Get results
     result = dict()
 
-    result = merge_two_dicts(get_user_config(), get_mau_prefs())
-    result = merge_two_dicts(result, vl_license_detect())
+    result = merge_two_dicts(get_mau_prefs(), vl_license_detect())
     result = merge_two_dicts(result, o365_license_detect())
     result = merge_two_dicts(result, shared_o365_license_detect())
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Excel.app"))

@@ -13,9 +13,13 @@ buttons:
   - label: v2016
     i18n_label: ms_office.2016
     class: btn-danger
+    hide_when_zero: True
   - label: v2019
     i18n_label: ms_office.2019
-    class: btn-warning
+    class: btn-danger
   - label: v2021
     i18n_label: ms_office.2021
+    class: btn-warning
+  - label: v2024
+    i18n_label: ms_office.2024
     class: btn-success
