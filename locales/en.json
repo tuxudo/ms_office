@@ -89,11 +89,15 @@
     "2016": "2016",
     "2019": "2019",
     "2021": "2021",
+    "2024": "2024",
     "mau_channel_widget": {
         "title": "Microsoft Update Channel",
         "insider_fast": "Insider Fast",
+        "beta": "Beta",
         "insider_slow": "Insider Slow",
-        "production": "Production"
+        "preview": "Preview",
+        "production": "Production",
+        "current": "Current"
       },
     "license_type_widget": {
         "title": "Microsoft Office License Type",
