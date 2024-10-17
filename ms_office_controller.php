@@ -131,11 +131,11 @@ class Ms_office_controller extends Module_controller
     **/
     public function get_license_mismatch()
     {
-        $sql = "SELECT COUNT(CASE WHEN `vl_license_type` like '%2011%' AND `word_office_generation` != '2011' THEN 1 END) AS 'v2011',
-                        COUNT(CASE WHEN `vl_license_type` like '%2016%' AND `word_office_generation` != '2016' THEN 1 END) AS 'v2016',
-                        COUNT(CASE WHEN `vl_license_type` like '%2019%' AND `word_office_generation` != '2019' THEN 1 END) AS 'v2019',
+        $sql = "SELECT COUNT(CASE WHEN `vl_license_type` like '%2024%' AND `word_office_generation` != '2024' THEN 1 END) AS 'v2024',
                         COUNT(CASE WHEN `vl_license_type` like '%2021%' AND `word_office_generation` != '2021' THEN 1 END) AS 'v2021',
-                        COUNT(CASE WHEN `vl_license_type` like '%2024%' AND `word_office_generation` != '2024' THEN 1 END) AS 'v2024'
+                        COUNT(CASE WHEN `vl_license_type` like '%2019%' AND `word_office_generation` != '2019' THEN 1 END) AS 'v2019',
+                        COUNT(CASE WHEN `vl_license_type` like '%2016%' AND `word_office_generation` != '2016' THEN 1 END) AS 'v2016',
+                        COUNT(CASE WHEN `vl_license_type` like '%2011%' AND `word_office_generation` != '2011' THEN 1 END) AS 'v2011'
                         FROM ms_office
                         LEFT JOIN reportdata USING (serial_number)
                         WHERE ".get_machine_group_filter('');

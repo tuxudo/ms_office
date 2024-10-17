@@ -4,7 +4,6 @@
 # made by Clayton Burlison and Michael Lynn
 # Other parts of the script from Paul Bowden's scripts found on his Github
 
-
 import subprocess
 import os
 import sys
@@ -217,18 +216,31 @@ def vl_license_detect():
         except:
             office_vl = open('/Library/Preferences/com.microsoft.office.licensingV2.plist', "rb").read().decode("utf-8", errors="ignore")
 
+        # Check if we have a stacked license
+        if office_vl.count('\n') > 120:
+            stacked = True
+        else:
+            stacked = False
+
         if 'Bozo+MzVxzFzbIo+hhzTl41DwAFJEitHSg5IiCEeuI' in office_vl:
             vl_license = "Office 2024 Volume License"
         elif 'Bozo+MzVxzFzbIo+hhzTl4hlrSMvpMqJ/gUHjvPE8/' in office_vl:
             vl_license = "Office 2024 Preview Volume License"
+
+        elif 'Bozo+MzVxzFzbIo+hhzTl4xkRZSjOUX8J8nIgpXuMa' in office_vl and stacked:
+            vl_license = "Office 2024/2021 Volume License (Stacked)"
         elif 'Bozo+MzVxzFzbIo+hhzTl4xkRZSjOUX8J8nIgpXuMa' in office_vl:
             vl_license = "Office 2021 Volume License"
         elif 'Bozo+MzVxzFzbIo+hhzTl43O7w5oMsJ7M3Q4vhvz/j' in office_vl:
             vl_license = "Office 2021 Preview Volume License"
+
+        elif 'A7vRjN2l/dCJHZOm8LKan11/zCYPCRpyChB6lOrgfi' in office_vl and stacked:
+            vl_license = "Office 2021/2019 Volume License (Stacked)"
         elif 'A7vRjN2l/dCJHZOm8LKan11/zCYPCRpyChB6lOrgfi' in office_vl:
             vl_license = "Office 2019 Volume License"
         elif 'Bozo+MzVxzFzbIo+hhzTl4JKv18WeUuUhLXtH0z36s' in office_vl:
             vl_license = "Office 2019 Preview Volume License"
+
         elif 'A7vRjN2l/dCJHZOm8LKan1Jax2s2f21lEF8Pe11Y+V' in office_vl:
             vl_license = "Office 2016 Volume License"
         elif 'DrL/l9tx4T9MsjKloHI5eX' in office_vl:
@@ -266,7 +278,7 @@ def o365_license_detect():
     o365_user_accounts = ""
 
     # Get all users' home folders
-    cmd = ['dscl', '.', '-readall', '/Users', 'NFSHomeDirectory']
+    cmd = ['/usr/bin/dscl', '.', '-readall', '/Users', 'NFSHomeDirectory']
     proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -276,12 +288,24 @@ def o365_license_detect():
     for user in output.decode("utf-8", errors="ignore").split('\n'):
         if 'NFSHomeDirectory' in user and '/var/empty' not in user:
             userpath1 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.Office365V2.plist'
-            # userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5'
-            userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e.plist'
-            userpath4 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e'
+            userpath2 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/com.microsoft.O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e.plist'
+            userpath3 = user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/O4kTOBJ0M5ITQxATLEJkQ40SNwQDNtQUOxATL1YUNxQUO2E0e'
 
-            if (os.path.exists(userpath1)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
-            # if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)) or (os.path.exists(userpath4)):
+            userpath4 = False
+            if os.path.exists(user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5/'):
+                for licenseFile in os.listdir(user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5/'):
+                    try:
+                        license_file_contents = open(user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5/'+licenseFile, "r").read()
+                    except:
+                        license_file_contents = open(user.replace("NFSHomeDirectory: ", "")+'/Library/Group Containers/UBF8T346G9.Office/Licenses/5/'+licenseFile, "rb").read().decode("utf-8", errors="ignore")
+
+                    # This file is weird, we have to check for {
+                    if '{' in license_file_contents:
+                        userpath4 = True
+                        break
+
+            # Check if there are any valid licenses detected
+            if (os.path.exists(userpath1)) or (os.path.exists(userpath2)) or (os.path.exists(userpath3)) or userpath4:
                 o365_count = o365_count + 1
                 o365_detect = 1
 
@@ -411,7 +435,7 @@ def get_user_path():
         username = get_last_user()
 
     # Get the user's home folder
-    cmd = ['dscl', '.', '-read', '/Users/'+username, 'NFSHomeDirectory']
+    cmd = ['/usr/bin/dscl', '.', '-read', '/Users/'+username, 'NFSHomeDirectory']
     proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -424,7 +448,7 @@ def get_user_prefs():
     user_prefs = ""
 
     # Get all users' home folders
-    cmd = ['dscl', '.', '-readall', '/Users', 'NFSHomeDirectory']
+    cmd = ['/usr/bin/dscl', '.', '-readall', '/Users', 'NFSHomeDirectory']
     proc = subprocess.Popen(cmd, shell=False, bufsize=-1,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -470,7 +494,7 @@ def main():
     cachedir = '%s/cache' % os.path.dirname(os.path.realpath(__file__))
     output_plist = os.path.join(cachedir, 'ms_office.plist')
     FoundationPlist.writePlist(result, output_plist)
-#    print FoundationPlist.writePlistToString(result)
+   # print FoundationPlist.writePlistToString(result)
 
 if __name__ == "__main__":
     main()
