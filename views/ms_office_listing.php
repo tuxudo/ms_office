@@ -37,11 +37,12 @@
                 <th data-i18n="ms_office.company_portal_app_version" data-colname='ms_office.company_portal_app_version'></th>
                 <th data-i18n="ms_office.atp_defender_app_version" data-colname='ms_office.atp_defender_app_version'></th>
                 <th data-i18n="ms_office.yammer_app_version" data-colname='ms_office.yammer_app_version'></th>
+                <th data-i18n="ms_office.copilot_app_version" data-colname='ms_office.copilot_app_version'></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td data-i18n="listing.loading" colspan="30" class="dataTables_empty"></td>
+                <td data-i18n="listing.loading" colspan="31" class="dataTables_empty"></td>
               </tr>
             </tbody>
           </table>

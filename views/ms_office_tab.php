@@ -22,6 +22,7 @@ $(document).on('appReady', function(){
             var rows_company_portal = ''
             var rows_defender = ''
             var rows_yammer = ''
+            var rows_copilot = ''
             var rows_reg_apps = '<tr><td>'+i18n.t('ms_office.no_registeredapplications')+'</td><td></td><td></td><td></td><td></td><td></td></tr>'
             var rdp_win_app = "win"
 
@@ -173,6 +174,9 @@ $(document).on('appReady', function(){
                     // Else if, Yammer
                     } else if(prop.indexOf('yammer_app_') > -1){
                         rows_yammer = rows_yammer + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
+                    // Else if, Copilot
+                    } else if(prop.indexOf('copilot_app_') > -1){
+                        rows_copilot = rows_copilot + '<tr><th>'+i18n.t('ms_office.'+prop)+'</th><td>'+d[prop]+'</td></tr>';
 
                     // Else if build out the registered applications table
                     } else if(prop == "registeredapplications"){
@@ -441,6 +445,20 @@ $(document).on('appReady', function(){
                             .addClass('table table-striped table-condensed')
                             .append($('<tbody>')
                                 .append(rows_yammer))))
+            }
+
+            // Copilot block
+            if (rows_copilot !== ''){
+                $('#ms_office-tab')
+                    .append($('<h4>')
+                        .append($('<i>')
+                            .addClass('fa fa-plane'))
+                        .append(' Copilot'))
+                    .append($('<div style="max-width:350px;">')
+                        .append($('<table>')
+                            .addClass('table table-striped table-condensed')
+                            .append($('<tbody>')
+                                .append(rows_copilot))))
             }
         })
     });

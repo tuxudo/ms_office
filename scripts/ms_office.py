@@ -11,13 +11,40 @@ import time
 import platform
 import string
 
-sys.path.insert(0, '/usr/local/munki')
 sys.path.insert(0, '/usr/local/munkireport')
 
 from munkilib import FoundationPlist
 from CoreFoundation import CFPreferencesCopyAppValue
 
 from SystemConfiguration import SCDynamicStoreCopyConsoleUser
+
+from ctypes import (CDLL,
+                    Structure,
+                    POINTER,
+                    c_int64,
+                    c_int32,
+                    c_int16,
+                    c_char,
+                    c_uint32)
+from ctypes.util import find_library
+
+class timeval(Structure):
+    _fields_ = [
+                ("tv_sec",  c_int64),
+                ("tv_usec", c_int32),
+               ]
+
+class utmpx(Structure):
+    _fields_ = [
+                ("ut_user", c_char*256),
+                ("ut_id",   c_char*4),
+                ("ut_line", c_char*32),
+                ("ut_pid",  c_int32),
+                ("ut_type", c_int16),
+                ("ut_tv",   timeval),
+                ("ut_host", c_char*256),
+                ("ut_pad",  c_uint32*16),
+               ]
 
 def get_mau_prefs():
     # Get the MAU's config as seen from the current or last person logged in
@@ -152,7 +179,6 @@ def process_registered_apps(apps):
                         else:
                             registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
 
-                       # registered_apps[app_name]['versionondisk'] = info_plist['CFBundleVersion']
                     except Exception:
                         pass
                 elif item == 'Last Update Seen':
@@ -374,7 +400,7 @@ def get_app_data(app_path):
         # Check if app is a Mac App Store app
         if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name and "company" not in app_name and "edge" not in app_name and "defender" not in app_name and "yammer" not in app_name:
             app_data[app_name+'_mas'] = 1
-        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name or "company" in app_name or "edge" in app_name and "defender" in app_name and "yammer" in app_name:
+        elif (( "excel" in app_name or "outlook" in app_name or "powerpoint" in app_name or "word" in app_name ) and app_data[app_name+'_office_generation'] == 2011) or "autoupdate" in app_name or "skype" in app_name or "company" in app_name or "edge" in app_name or "defender" in app_name or "yammer" in app_name or "copilot" in app_name:
             # Do nothing as app is an Office 2011 app or not in the app store
             pass
         else:
@@ -398,6 +424,7 @@ def merge_two_dicts(x, y):
 def current_user():
 
     # local constants
+    c = CDLL(find_library("System"))
     username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]
     username = [username,""][username in ["loginwindow", None, ""]]
 
@@ -415,7 +442,7 @@ def current_user():
         while entry:
             e = entry.contents
             entry = getutxent_wtmp()
-            if (e.ut_type == 7 and e.ut_line == "console" and e.ut_user != "root" and e.ut_user != ""):
+            if (e.ut_type == 7 and e.ut_line == b"console" and e.ut_user != "root" and e.ut_user != "" and e.ut_user != b"root" and e.ut_user != b""):
                 endutxent_wtmp()
                 return e.ut_user
     else:
@@ -437,7 +464,7 @@ def get_user_path():
     
     # If we can't get the current user, get last console login
     if username == "":
-        username = get_last_user()
+        username = current_user()
 
     # Get the user's home folder
     cmd = ['/usr/bin/dscl', '.', '-read', '/Users/'+username, 'NFSHomeDirectory']
@@ -487,6 +514,7 @@ def main():
     result = merge_two_dicts(result, get_app_data("/Applications/Company Portal.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Defender ATP.app"))
     result = merge_two_dicts(result, get_app_data("/Applications/Yammer.app"))
+    result = merge_two_dicts(result, get_app_data("/Applications/Microsoft 365 Copilot.app"))
 
     # Edge has four different channels, get them in priority
     result = merge_two_dicts(result, get_app_data("/Applications/Microsoft Edge Canary.app"))
