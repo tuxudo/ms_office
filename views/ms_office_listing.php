@@ -52,7 +52,6 @@
 </div>  <!-- /container -->
 
 <script type="text/javascript">
-    // Version: 1.0.1 - Debug search issues
 
     $(document).on('appUpdate', function(e){
         var oTable = $('.table').DataTable();
@@ -84,7 +83,6 @@
             col++
         });
 
-        console.log('Initializing DataTable for MS Office listing');
         oTable = $('.table').dataTable( {
             ajax: {
                 url: appUrl + '/datatables/data',
@@ -95,15 +93,12 @@
                     
                     // Check for column in search
                     if(d.search.value){
-                        console.log('Search value:', d.search.value);
                         $.each(d.columns, function(index, item){
                             // Handle specific search components
                             if(d.search.value == 'excel_mas_yes' && item.name == 'ms_office.excel_mas'){
                                 d.columns[index].search.value = '= 1';
-                                console.log('Searching for excel_mas_yes, value:', d.columns[index].search.value);
                             } else if(d.search.value == 'excel_mas_no' && item.name == 'ms_office.excel_mas'){
                                 d.columns[index].search.value = '= 0';
-                                console.log('Searching for excel_mas_no, value:', d.columns[index].search.value);
                             } else if(d.search.value == 'word_mas_yes' && item.name == 'ms_office.word_mas'){
                                 d.columns[index].search.value = '= 1';
                             } else if(d.search.value == 'word_mas_no' && item.name == 'ms_office.word_mas'){
@@ -130,13 +125,10 @@
                                 d.columns[index].search.value = '= 0';
                             } else if(d.search.value == 'o365_license' && item.name == 'ms_office.o365_detected'){
                                 d.columns[index].search.value = '= 1';
-                                console.log('Searching for o365_license, value:', d.columns[index].search.value);
                             } else if(d.search.value == 'vl_license' && item.name == 'ms_office.vl_license_type'){
                                 d.columns[index].search.value = '%Volume License%';
-                                console.log('Searching for vl_license, value:', d.columns[index].search.value);
                             } else if(d.search.value == 'retail_license' && item.name == 'ms_office.vl_license_type'){
                                 d.columns[index].search.value = '%Home and%';
-                                console.log('Searching for retail_license, value:', d.columns[index].search.value);
                             } else if(d.search.value == 'word_2011' && item.name == 'ms_office.word_office_generation'){
                                 d.columns[index].search.value = '= 2011';
                             } else if(d.search.value == 'word_2016' && item.name == 'ms_office.word_office_generation'){

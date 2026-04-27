@@ -150,28 +150,15 @@ class Ms_office_controller extends Module_controller
     }
 
     /**
-     * Get data for MAS widget
-     *
-     * @return void
-     * @author tuxudo
-     **/
+    * Retrieve data in json format
+    *
+    * @return void
+    * @author tuxudo
+    **/
     public function get_mas($app)
     {
-        // Sanitize input - fix regex pattern
         $app = preg_replace("/[^a-z0-9_]+/", '', $app);
-        
-        // Whitelist allowed MS Office applications to prevent injection
-        $allowed_apps = [
-            'word', 'excel', 'powerpoint', 'outlook', 'onenote', 'access', 'publisher',
-            'onedrive', 'remote_desktop', 'skype_for_business', 'autoupdate'
-        ];
-        
-        if (!in_array($app, $allowed_apps)) {
-            jsonView([]);
-            return;
-        }
 
-        // Safe to use app name since it's whitelisted
         $sql = "SELECT COUNT(CASE WHEN `{$app}_mas` = 1 THEN 1 END) AS 'yes',
                     COUNT(CASE WHEN `{$app}_mas` = 0 THEN 1 END) AS 'no'
                     FROM ms_office
@@ -188,27 +175,15 @@ class Ms_office_controller extends Module_controller
     }
 
     /**
-     * Get data for generation widget
-     *
-     * @return void
-     * @author tuxudo
-     **/
+    * Retrieve data in json format
+    *
+    * @return void
+    * @author tuxudo
+    **/
     public function get_generation($app)
     {
-        // Sanitize input - fix regex pattern
         $app = preg_replace("/[^a-z0-9_]+/", '', $app);
-        
-        // Whitelist allowed MS Office applications to prevent injection (generation widgets only work for these apps)
-        $allowed_apps = [
-            'word', 'excel', 'powerpoint', 'outlook', 'onenote'
-        ];
-        
-        if (!in_array($app, $allowed_apps)) {
-            jsonView([]);
-            return;
-        }
 
-        // Safe to use app name since it's whitelisted
         $sql = "SELECT COUNT(CASE WHEN `{$app}_office_generation` = 2011 THEN 1 END) AS 'v2011',
                     COUNT(CASE WHEN `{$app}_office_generation` = 2016 THEN 1 END) AS 'v2016',
                     COUNT(CASE WHEN `{$app}_office_generation` = 2019 THEN 1 END) AS 'v2019',
@@ -235,22 +210,15 @@ class Ms_office_controller extends Module_controller
     **/
     public function get_tab_data($serial_number = '')
     {
-        // Sanitize input - fix regex pattern and validate
         $serial_number = preg_replace("/[^A-Za-z0-9_\-]+/", '', $serial_number);
-        
-        if (empty($serial_number)) {
-            jsonView([]);
-            return;
-        }
 
-        // Use parameterized query to prevent SQL injection
-        $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `msupdate_check_enabled`, `o365_license_count`, `o365_detected`, `o365_user_accounts`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `company_portal_app_version`, `atp_defender_app_version`, `edge_app_version`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `teams_app_version`, `teams_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `yammer_app_version`, `registeredapplications`
+        $sql = "SELECT `channelname`, `howtocheck`, `lastcheckforupdates`, `manifestserver`, `updatecache`, `o365_license_count`, `o365_detected`, `o365_user_accounts`, `shared_o365_license`, `enablecheckforupdatesbutton`, `sendalltelemetryenabled`, `disableinsidercheckbox`, `startdaemononapplaunch`, `vl_license_type`, `mau_privilegedhelpertool`, `autoupdate_app_version`, `autoupdate_mas`, `company_portal_app_version`, `atp_defender_app_version`, `edge_app_version`, `excel_app_version`, `excel_mas`, `excel_office_generation`, `onedrive_app_version`, `onedrive_mas`, `onenote_app_version`, `onenote_mas`, `onenote_office_generation`, `outlook_app_version`, `outlook_mas`, `outlook_office_generation`, `powerpoint_app_version`, `powerpoint_mas`, `powerpoint_office_generation`, `remote_desktop_app_version`, `remote_desktop_mas`, `skype_for_business_app_version`, `teams_app_version`, `teams_mas`, `word_app_version`, `word_mas`, `word_office_generation`, `yammer_app_version`, `copilot_app_version`, `registeredapplications`
                         FROM ms_office 
                         LEFT JOIN reportdata USING (serial_number)
                         ".get_machine_group_filter()."
-                        AND serial_number = ?";
+                        AND serial_number = '$serial_number'";
 
         $queryobj = new Ms_office_model();
-        jsonView($queryobj->query($sql, [$serial_number]));
+        jsonView($queryobj->query($sql));
     }
 } // END class Ms_office_controller
