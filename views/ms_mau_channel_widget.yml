@@ -9,9 +9,12 @@ buttons:
   - label: Beta
     i18n_label: ms_office.mau_channel_widget.beta
     class: btn-danger 
+    search_component: mau_channel_beta
   - label: Preview
     i18n_label: ms_office.mau_channel_widget.preview
     class: btn-warning
+    search_component: mau_channel_preview
   - label: Current
     i18n_label: ms_office.mau_channel_widget.current
     class: btn-success
+    search_component: mau_channel_current

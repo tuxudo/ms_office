@@ -10,16 +10,21 @@ buttons:
     i18n_label: ms_office.2011
     class: btn-danger 
     hide_when_zero: True
+    search_component: powerpoint_2011
   - label: v2016
     i18n_label: ms_office.2016
     class: btn-danger
     hide_when_zero: True
+    search_component: powerpoint_2016
   - label: v2019
     i18n_label: ms_office.2019
     class: btn-danger
+    search_component: powerpoint_2019
   - label: v2021
     i18n_label: ms_office.2021
     class: btn-warning
+    search_component: powerpoint_2021
   - label: v2024
     i18n_label: ms_office.2024
     class: btn-success
+    search_component: powerpoint_2024

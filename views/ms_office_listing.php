@@ -10,6 +10,7 @@
                 <th data-i18n="listing.computername" data-colname='machine.computer_name'></th>
                 <th data-i18n="serial" data-colname='reportdata.serial_number'></th>
                 <th data-i18n="ms_office.vl_license_type" data-colname='ms_office.vl_license_type'></th>
+                <th data-i18n="ms_office.o365_detected_short" data-colname='ms_office.o365_detected'></th>
                 <th data-i18n="ms_office.o365_license_count_short" data-colname='ms_office.o365_license_count'></th>
                 <th data-i18n="ms_office.shared_o365_license_short" data-colname='ms_office.shared_o365_license'></th>
                 <th data-i18n="ms_office.excel_office_generation" data-colname='ms_office.excel_office_generation'></th>
@@ -42,7 +43,7 @@
             </thead>
             <tbody>
               <tr>
-                <td data-i18n="listing.loading" colspan="31" class="dataTables_empty"></td>
+                <td data-i18n="listing.loading" colspan="32" class="dataTables_empty"></td>
               </tr>
             </tbody>
           </table>
@@ -51,6 +52,7 @@
 </div>  <!-- /container -->
 
 <script type="text/javascript">
+    // Version: 1.0.1 - Debug search issues
 
     $(document).on('appUpdate', function(e){
         var oTable = $('.table').DataTable();
@@ -82,6 +84,7 @@
             col++
         });
 
+        console.log('Initializing DataTable for MS Office listing');
         oTable = $('.table').dataTable( {
             ajax: {
                 url: appUrl + '/datatables/data',
@@ -89,6 +92,106 @@
                 data: function(d){
                     d.mrColNotEmpty = "ms_office.o365_detected";
                     // Do not show row if column o365_detected is empty
+                    
+                    // Check for column in search
+                    if(d.search.value){
+                        console.log('Search value:', d.search.value);
+                        $.each(d.columns, function(index, item){
+                            // Handle specific search components
+                            if(d.search.value == 'excel_mas_yes' && item.name == 'ms_office.excel_mas'){
+                                d.columns[index].search.value = '= 1';
+                                console.log('Searching for excel_mas_yes, value:', d.columns[index].search.value);
+                            } else if(d.search.value == 'excel_mas_no' && item.name == 'ms_office.excel_mas'){
+                                d.columns[index].search.value = '= 0';
+                                console.log('Searching for excel_mas_no, value:', d.columns[index].search.value);
+                            } else if(d.search.value == 'word_mas_yes' && item.name == 'ms_office.word_mas'){
+                                d.columns[index].search.value = '= 1';
+                            } else if(d.search.value == 'word_mas_no' && item.name == 'ms_office.word_mas'){
+                                d.columns[index].search.value = '= 0';
+                            } else if(d.search.value == 'outlook_mas_yes' && item.name == 'ms_office.outlook_mas'){
+                                d.columns[index].search.value = '= 1';
+                            } else if(d.search.value == 'outlook_mas_no' && item.name == 'ms_office.outlook_mas'){
+                                d.columns[index].search.value = '= 0';
+                            } else if(d.search.value == 'onenote_mas_yes' && item.name == 'ms_office.onenote_mas'){
+                                d.columns[index].search.value = '= 1';
+                            } else if(d.search.value == 'onenote_mas_no' && item.name == 'ms_office.onenote_mas'){
+                                d.columns[index].search.value = '= 0';
+                            } else if(d.search.value == 'onedrive_mas_yes' && item.name == 'ms_office.onedrive_mas'){
+                                d.columns[index].search.value = '= 1';
+                            } else if(d.search.value == 'onedrive_mas_no' && item.name == 'ms_office.onedrive_mas'){
+                                d.columns[index].search.value = '= 0';
+                            } else if(d.search.value == 'remote_desktop_mas_yes' && item.name == 'ms_office.remote_desktop_mas'){
+                                d.columns[index].search.value = '= 1';
+                            } else if(d.search.value == 'remote_desktop_mas_no' && item.name == 'ms_office.remote_desktop_mas'){
+                                d.columns[index].search.value = '= 0';
+                            } else if(d.search.value == 'powerpoint_mas_yes' && item.name == 'ms_office.powerpoint_mas'){
+                                d.columns[index].search.value = '= 1';
+                            } else if(d.search.value == 'powerpoint_mas_no' && item.name == 'ms_office.powerpoint_mas'){
+                                d.columns[index].search.value = '= 0';
+                            } else if(d.search.value == 'o365_license' && item.name == 'ms_office.o365_detected'){
+                                d.columns[index].search.value = '= 1';
+                                console.log('Searching for o365_license, value:', d.columns[index].search.value);
+                            } else if(d.search.value == 'vl_license' && item.name == 'ms_office.vl_license_type'){
+                                d.columns[index].search.value = '%Volume License%';
+                                console.log('Searching for vl_license, value:', d.columns[index].search.value);
+                            } else if(d.search.value == 'retail_license' && item.name == 'ms_office.vl_license_type'){
+                                d.columns[index].search.value = '%Home and%';
+                                console.log('Searching for retail_license, value:', d.columns[index].search.value);
+                            } else if(d.search.value == 'word_2011' && item.name == 'ms_office.word_office_generation'){
+                                d.columns[index].search.value = '= 2011';
+                            } else if(d.search.value == 'word_2016' && item.name == 'ms_office.word_office_generation'){
+                                d.columns[index].search.value = '= 2016';
+                            } else if(d.search.value == 'word_2019' && item.name == 'ms_office.word_office_generation'){
+                                d.columns[index].search.value = '= 2019';
+                            } else if(d.search.value == 'word_2021' && item.name == 'ms_office.word_office_generation'){
+                                d.columns[index].search.value = '= 2021';
+                            } else if(d.search.value == 'word_2024' && item.name == 'ms_office.word_office_generation'){
+                                d.columns[index].search.value = '= 2024';
+                            } else if(d.search.value == 'excel_2011' && item.name == 'ms_office.excel_office_generation'){
+                                d.columns[index].search.value = '= 2011';
+                            } else if(d.search.value == 'excel_2016' && item.name == 'ms_office.excel_office_generation'){
+                                d.columns[index].search.value = '= 2016';
+                            } else if(d.search.value == 'excel_2019' && item.name == 'ms_office.excel_office_generation'){
+                                d.columns[index].search.value = '= 2019';
+                            } else if(d.search.value == 'excel_2021' && item.name == 'ms_office.excel_office_generation'){
+                                d.columns[index].search.value = '= 2021';
+                            } else if(d.search.value == 'excel_2024' && item.name == 'ms_office.excel_office_generation'){
+                                d.columns[index].search.value = '= 2024';
+                            } else if(d.search.value == 'powerpoint_2011' && item.name == 'ms_office.powerpoint_office_generation'){
+                                d.columns[index].search.value = '= 2011';
+                            } else if(d.search.value == 'powerpoint_2016' && item.name == 'ms_office.powerpoint_office_generation'){
+                                d.columns[index].search.value = '= 2016';
+                            } else if(d.search.value == 'powerpoint_2019' && item.name == 'ms_office.powerpoint_office_generation'){
+                                d.columns[index].search.value = '= 2019';
+                            } else if(d.search.value == 'powerpoint_2021' && item.name == 'ms_office.powerpoint_office_generation'){
+                                d.columns[index].search.value = '= 2021';
+                            } else if(d.search.value == 'powerpoint_2024' && item.name == 'ms_office.powerpoint_office_generation'){
+                                d.columns[index].search.value = '= 2024';
+                            } else if(d.search.value == 'outlook_2011' && item.name == 'ms_office.outlook_office_generation'){
+                                d.columns[index].search.value = '= 2011';
+                            } else if(d.search.value == 'outlook_2016' && item.name == 'ms_office.outlook_office_generation'){
+                                d.columns[index].search.value = '= 2016';
+                            } else if(d.search.value == 'outlook_2019' && item.name == 'ms_office.outlook_office_generation'){
+                                d.columns[index].search.value = '= 2019';
+                            } else if(d.search.value == 'outlook_2021' && item.name == 'ms_office.outlook_office_generation'){
+                                d.columns[index].search.value = '= 2021';
+                            } else if(d.search.value == 'outlook_2024' && item.name == 'ms_office.outlook_office_generation'){
+                                d.columns[index].search.value = '= 2024';
+                            } else if(d.search.value == 'onenote_2011' && item.name == 'ms_office.onenote_office_generation'){
+                                d.columns[index].search.value = '= 2011';
+                            } else if(d.search.value == 'onenote_2016' && item.name == 'ms_office.onenote_office_generation'){
+                                d.columns[index].search.value = '= 2016';
+                            } else if(d.search.value == 'onenote_2019' && item.name == 'ms_office.onenote_office_generation'){
+                                d.columns[index].search.value = '= 2019';
+                            } else if(d.search.value == 'onenote_2021' && item.name == 'ms_office.onenote_office_generation'){
+                                d.columns[index].search.value = '= 2021';
+                            } else if(d.search.value == 'onenote_2024' && item.name == 'ms_office.onenote_office_generation'){
+                                d.columns[index].search.value = '= 2024';
+                            } else if(item.name == 'ms_office.' + d.search.value){
+                                d.columns[index].search.value = '> 0';
+                            }
+                        });
+                    }
                 }
             },
             dom: mr.dt.buttonDom,
@@ -103,53 +206,59 @@
                 var link = mr.getClientDetailLink(name, sn, '#tab_ms_office');
                 $('td:eq(0)', nRow).html(link);
 
-                // Format shared o365
-                var status=$('td:eq(4)', nRow).html();
+                // Format o365 detected
+                var status=$('td:eq(3)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(4)', nRow).html(status)
+                $('td:eq(3)', nRow).html(status)
+
+                // Format shared o365
+                var status=$('td:eq(5)', nRow).html();
+                status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
+                (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
+                $('td:eq(5)', nRow).html(status)
 
                 // Format Excel MAS
-                var status=$('td:eq(7)', nRow).html();
+                var status=$('td:eq(8)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(7)', nRow).html(status)
+                $('td:eq(8)', nRow).html(status)
 
                 // Format OneNote MAS
-                var status=$('td:eq(10)', nRow).html();
+                var status=$('td:eq(11)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(10)', nRow).html(status)
+                $('td:eq(11)', nRow).html(status)
 
                 // Format Outlook MAS
-                var status=$('td:eq(13)', nRow).html();
+                var status=$('td:eq(14)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(13)', nRow).html(status)
+                $('td:eq(14)', nRow).html(status)
 
                 // Format PowerPoint MAS
-                var status=$('td:eq(16)', nRow).html();
+                var status=$('td:eq(17)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(16)', nRow).html(status)
+                $('td:eq(17)', nRow).html(status)
 
                 // Format Word MAS
-                var status=$('td:eq(19)', nRow).html();
+                var status=$('td:eq(20)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(19)', nRow).html(status)
+                $('td:eq(20)', nRow).html(status)
 
                 // Format OneDrive MAS
-                var status=$('td:eq(22)', nRow).html();
+                var status=$('td:eq(23)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(22)', nRow).html(status)
+                $('td:eq(23)', nRow).html(status)
 
                 // Format Remote Desktop MAS
-                var status=$('td:eq(24)', nRow).html();
+                var status=$('td:eq(25)', nRow).html();
                 status = status == 1 ? '<span class="label label-danger">'+i18n.t('yes')+'</span>' :
                 (status == 0 && status != '' ? '<span class="label label-success">'+i18n.t('no')+'</span>' : '')
-                $('td:eq(24)', nRow).html(status)
+                $('td:eq(25)', nRow).html(status)
             }
         });
 

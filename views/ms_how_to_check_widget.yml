@@ -9,9 +9,12 @@ buttons:
   - label: AutomaticDownload
     i18n_label: ms_office.how_to_check_widget.automatic_download
     class: btn-danger 
+    search_component: automatic_download
   - label: AutomaticCheck
     i18n_label: ms_office.how_to_check_widget.automatic_check
     class: btn-warning
+    search_component: automatic_check
   - label: Manual
     i18n_label: ms_office.how_to_check_widget.manual
     class: btn-success
+    search_component: manual_check

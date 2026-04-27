@@ -9,6 +9,8 @@ buttons:
   - label: yes
     i18n_label: yes
     class: btn-warning 
+    search_component: powerpoint_mas_yes
   - label: no
     i18n_label: no
     class: btn-success
+    search_component: powerpoint_mas_no

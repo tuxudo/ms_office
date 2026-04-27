@@ -71,6 +71,33 @@
                 data: function(d){
                     d.mrColNotEmpty = "ms_office.enablecheckforupdatesbutton";
                     // Do not show row if column enablecheckforupdatesbutton is empty
+                    
+                    // Check for column in search
+                    if(d.search.value){
+                        $.each(d.columns, function(index, item){
+                            // Handle howtocheck column specifically for string searches
+                            if(d.search.value == 'automatic_download' && item.name == 'ms_office.howtocheck'){
+                                d.columns[index].search.value = 'AutomaticDownload';
+                            } else if(d.search.value == 'automatic_check' && item.name == 'ms_office.howtocheck'){
+                                d.columns[index].search.value = 'AutomaticCheck';
+                            } else if(d.search.value == 'manual_check' && item.name == 'ms_office.howtocheck'){
+                                d.columns[index].search.value = 'Manual';
+                            // MAU Channel search mapping
+                            } else if(d.search.value == 'mau_channel_beta' && item.name == 'ms_office.channelname'){
+                                d.columns[index].search.value = 'Beta';
+                            } else if(d.search.value == 'mau_channel_preview' && item.name == 'ms_office.channelname'){
+                                d.columns[index].search.value = 'Preview';
+                            } else if(d.search.value == 'mau_channel_current' && item.name == 'ms_office.channelname'){
+                                d.columns[index].search.value = 'Current';
+                            } else if(item.name == 'ms_office.howtocheck' && d.search.value){
+                                d.columns[index].search.value = d.search.value;
+                            }
+                            // Handle other numeric columns
+                            else if(item.name == 'ms_office.' + d.search.value){
+                                d.columns[index].search.value = '> 0';
+                            }
+                        });
+                    }
                 }
             },
             dom: mr.dt.buttonDom,

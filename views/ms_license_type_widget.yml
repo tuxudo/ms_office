@@ -9,10 +9,13 @@ buttons:
   - label: o365
     i18n_label: ms_office.license_type_widget.o365
     class: btn-info 
+    search_component: o365_license
   - label: vl
     i18n_label: ms_office.license_type_widget.vl
     class: btn-info
+    search_component: vl_license
   - label: retail
     i18n_label: ms_office.license_type_widget.retail
     class: btn-info
     hide_when_zero: True
+    search_component: retail_license

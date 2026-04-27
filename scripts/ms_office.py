@@ -103,7 +103,8 @@ def get_mau_prefs():
         ChannelName = CFPreferencesCopyAppValue('ChannelName', 'com.microsoft.autoupdate2')
         if ChannelName is not None:
             mau_config_items['channelname'] = ChannelName
-        else:
+        elif 'channelname' not in mau_config_items:
+            # Only set default if no user-level channelname was found
             mau_config_items['channelname'] = "Current"
 
         HowToCheck = CFPreferencesCopyAppValue('HowToCheck', 'com.microsoft.autoupdate2')
