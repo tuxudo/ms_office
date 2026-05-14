@@ -15,7 +15,6 @@ sys.path.insert(0, '/usr/local/munkireport')
 
 from munkilib import FoundationPlist
 from CoreFoundation import CFPreferencesCopyAppValue
-from pkg_resources import packaging
 
 from SystemConfiguration import SCDynamicStoreCopyConsoleUser
 
@@ -388,16 +387,21 @@ def get_app_data(app_path):
         gencheck = '.'.join(info_plist['CFBundleShortVersionString'].split(".")[:2])
 
         # Check generation of Office
-        if (packaging.version.parse("14.7") >= packaging.version.parse(str(gencheck))) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+        if compare_versions("14.7.7", gencheck) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2011
-        elif (packaging.version.parse("15.11") <= packaging.version.parse(str(gencheck)) <= packaging.version.parse("16.16")) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+            # 2011 = 14.0.0 through 14.7.7
+        elif compare_versions("16.16.99", gencheck) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2016
-        elif (packaging.version.parse("16.17") <= packaging.version.parse(str(gencheck)) <= packaging.version.parse("16.78")) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+            # 2016 = 15.11.9 through 16.16.99
+        elif compare_versions("16.78.99", gencheck) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2019
-        elif (packaging.version.parse("16.79") <= packaging.version.parse(str(gencheck)) <= packaging.version.parse("16.89")) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+            # 2019 = 16.17.0 through 16.78.99
+        elif compare_versions("16.89.99", gencheck) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2021
-        elif (packaging.version.parse("16.90") <= packaging.version.parse(str(gencheck))) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
+            # 2021 = 16.79.0 through 16.89.99
+        elif compare_versions("100.99.99", gencheck) and ( "excel" in app_name or "outlook" in app_name or "onenote" in app_name or "powerpoint" in app_name or "word" in app_name ):
             app_data[app_name+'_office_generation'] = 2024
+            # 2024 = 16.90.0 through 
 
         # Check if app is a Mac App Store app
         if os.path.exists(app_path+"/Contents/_MASReceipt") and "autoupdate" not in app_name and "skype" not in app_name and "company" not in app_name and "edge" not in app_name and "defender" not in app_name and "yammer" not in app_name:
@@ -495,6 +499,21 @@ def get_user_prefs():
                 user_prefs = user_pref + "\n" + user_prefs  
 
     return user_prefs[:-1]
+
+def compare_versions(v1, v2):
+
+    if v1 == v2:
+        return True
+
+    v1t = [int(num) for num in v1.split('.')]
+    v2t = [int(num) for num in v2.split('.')]
+
+    for v1v, v2v in zip(v1t, v2t):
+        if v1v > v2v:
+            return True
+            # return v1
+        elif v2v > v1v:
+            return False
 
 def main():
 
